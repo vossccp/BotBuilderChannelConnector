@@ -1,0 +1,7 @@
+Autofac
+Microsoft.Bot.Builder
+
+group test
+	xunit
+	xunit.runner.console
+	xunit.runner.visualstudio

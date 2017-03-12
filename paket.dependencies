@@ -1,0 +1,17 @@
+redirects: on
+framework: net46
+source https://www.nuget.org/api/v2/
+
+nuget Autofac
+nuget Owin
+nuget Microsoft.Owin.SelfHost
+nuget Microsoft.Owin.Host.SystemWeb
+nuget Microsoft.Bot.Builder
+
+group test
+	framework: net46
+	source https://www.nuget.org/api/v2/
+
+	nuget xunit
+	nuget xunit.runner.console
+	nuget xunit.runner.visualstudio
