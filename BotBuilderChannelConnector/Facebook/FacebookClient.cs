@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.ConnectorEx;
 using Newtonsoft.Json.Linq;
 using Vossccp.BotBuilder.ChannelConnector.Facebook.Schema;
+using System.Diagnostics;
 
 namespace Vossccp.BotBuilder.ChannelConnector.Facebook
 {
@@ -54,10 +55,13 @@ namespace Vossccp.BotBuilder.ChannelConnector.Facebook
 
         public async Task<HttpOperationResponse<object>> SendAsync(FacebookOutboundMessaging messaging)
         {
+            Trace.TraceInformation("Sending message");
+
             using (var client = new HttpClient())
             {
                 var content = JsonConvert.SerializeObject(messaging, serializerSettings);
-                Console.WriteLine(content);
+
+                Trace.TraceInformation(content);
 
                 var request = new HttpRequestMessage(HttpMethod.Post, Url + pageAccessToken)
                 {
