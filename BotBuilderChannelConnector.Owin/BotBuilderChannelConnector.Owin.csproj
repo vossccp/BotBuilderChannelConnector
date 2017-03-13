@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0728FC37-5A8A-4AF7-AA02-A6655D3DED57}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Vossccp.BotBuilder.ChannelConnector.Demo</RootNamespace>
-    <AssemblyName>BotBuilderChannelConnectorDemo</AssemblyName>
+    <ProjectGuid>{8305C07A-9070-42D7-BB1F-89DCDC640EE7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Vossccp.BotBuilder.ChannelConnector.Owin</RootNamespace>
+    <AssemblyName>BotBuilderChannelConnector.Owin</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -34,9 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,29 +40,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DemoDialog.cs" />
-    <Compile Include="EchoDialog.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Facebook\FacebookApiConfig.cs" />
+    <Compile Include="Facebook\FacebookMessangerMiddleware.cs" />
+    <Compile Include="Facebook\FacebookMiddlewareConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <Content Include="paket.references" />
-    <EmbeddedResource Include="app.secrets.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BotBuilderChannelConnector.Owin\BotBuilderChannelConnector.Owin.csproj">
-      <Project>{8305c07a-9070-42d7-bb1f-89dcdc640ee7}</Project>
-      <Name>BotBuilderChannelConnector.Owin</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BotBuilderChannelConnector\BotBuilderChannelConnector.csproj">
       <Project>{31610fb9-82f3-4d96-9c7b-eafecd5718f1}</Project>
-      <Name>BotBuilderCannelConnector</Name>
+      <Name>BotBuilderChannelConnector</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="paket.references" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Choose>
@@ -160,30 +145,8 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
       <ItemGroup>
-        <Reference Include="Microsoft.Owin.Diagnostics">
-          <HintPath>..\packages\Microsoft.Owin.Diagnostics\lib\net45\Microsoft.Owin.Diagnostics.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
-      <ItemGroup>
-        <Reference Include="Microsoft.Owin.Host.HttpListener">
-          <HintPath>..\packages\Microsoft.Owin.Host.HttpListener\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
-      <ItemGroup>
-        <Reference Include="Microsoft.Owin.Hosting">
-          <HintPath>..\packages\Microsoft.Owin.Hosting\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+        <Reference Include="Microsoft.Owin.Host.SystemWeb">
+          <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

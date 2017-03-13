@@ -8,9 +8,9 @@ using Vossccp.BotBuilder.ChannelConnector.Facebook.Schema;
 
 namespace Vossccp.BotBuilder.ChannelConnector.Facebook
 {
-    internal static class MessageActivityExtensions
+    public static class MessageActivityExtensions
     {
-        internal static IEnumerable<IMessageActivity> ToMessageActivities(this FacebookRequestMessage fbRequestMessage)
+        public static IEnumerable<IMessageActivity> ToMessageActivities(this FacebookRequestMessage fbRequestMessage)
         {
             return fbRequestMessage.Entries
                 //.Where(m => m.Messaging != null)

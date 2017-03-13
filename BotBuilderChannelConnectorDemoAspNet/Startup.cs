@@ -28,6 +28,7 @@ namespace Vossccp.BotBuilder.ChannelConnector.Demo.AspNet
                     PageId = settings["PageId"],
                     AppId = settings["AppId"],
                     AppSecret = settings["AppSecret"],
+                    VerifyToken = settings["VerificationToken"],
                     PageAccessToken = settings["PageAccessToken"]
                 },
                 onActivityAsync: (activiy) =>

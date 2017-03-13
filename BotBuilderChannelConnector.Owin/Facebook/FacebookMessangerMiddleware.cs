@@ -1,28 +1,23 @@
-﻿using Microsoft.Bot.Builder.ConnectorEx;
-using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Connector;
+﻿using Microsoft.Bot.Connector;
 using Microsoft.Owin;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
+using Vossccp.BotBuilder.ChannelConnector.Facebook;
 using Vossccp.BotBuilder.ChannelConnector.Facebook.Schema;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Facebook
+namespace Vossccp.BotBuilder.ChannelConnector.Owin.Facebook
 {
     public class FacebookMessangerMiddleware : OwinMiddleware
     {
-        readonly FacebookConfig config;
+        readonly FacebookApiConfig config;
         readonly Func<IMessageActivity, Task> onActivityAsync;
         readonly string path;
 
-        public FacebookMessangerMiddleware(OwinMiddleware next, FacebookConfig config, Func<IMessageActivity, Task> onActivityAsync)
+        public FacebookMessangerMiddleware(OwinMiddleware next, FacebookApiConfig config, Func<IMessageActivity, Task> onActivityAsync)
             : base(next)
         {
             path = config.Path ?? "/";
@@ -76,8 +71,8 @@ namespace Vossccp.BotBuilder.ChannelConnector.Facebook
 
             foreach (var activity in activities)
             {
-                Trace.TraceInformation("Recieved activity {0}", activity.Id);
-                await onActivityAsync(activity);                
+                Trace.TraceInformation("Recieved activity {0} for {1}", activity.Id, activity.Recipient.Id);
+                await onActivityAsync(activity);
             }
         }
 

@@ -60,8 +60,6 @@
     <Compile Include="Facebook\Schema\FacebookQuickReply.cs" />
     <Compile Include="Facebook\Schema\FacebookRecipient.cs" />
     <Compile Include="Facebook\Schema\FacebookRequestMessage.cs" />
-    <Compile Include="Facebook\FacebookMessangerMiddleware.cs" />
-    <Compile Include="Facebook\FacebookMiddlewareConfig.cs" />
     <Compile Include="Facebook\FacebookResponse.cs" />
     <Compile Include="Facebook\MessageActivityExtensions.cs" />
     <Compile Include="Facebook\Schema\FacebookSender.cs" />
@@ -150,28 +148,6 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
       <ItemGroup>
-        <Reference Include="Microsoft.Owin">
-          <HintPath>..\packages\Microsoft.Owin\lib\net45\Microsoft.Owin.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
-      <ItemGroup>
-        <Reference Include="Microsoft.Owin.Host.SystemWeb">
-          <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
-      <ItemGroup>
         <Reference Include="System.Net">
           <Paket>True</Paket>
         </Reference>
@@ -197,17 +173,6 @@
       <ItemGroup>
         <Reference Include="Newtonsoft.Json">
           <HintPath>..\packages\Newtonsoft.Json\lib\net45\Newtonsoft.Json.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
-      <ItemGroup>
-        <Reference Include="Owin">
-          <HintPath>..\packages\Owin\lib\net40\Owin.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

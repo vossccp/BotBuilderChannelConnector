@@ -6,6 +6,7 @@ using System.Configuration;
 using Autofac;
 using Microsoft.Bot.Builder.Dialogs.Internals;
 using Microsoft.Bot.Connector;
+using Vossccp.BotBuilder.ChannelConnector.Owin.Facebook;
 
 namespace Vossccp.BotBuilder.ChannelConnector.Demo
 {
@@ -18,12 +19,13 @@ namespace Vossccp.BotBuilder.ChannelConnector.Demo
             var settings = ConfigurationManager.AppSettings;
 
             appBuilder.UseFacebookMessenger(
-                config: new FacebookConfig
+                config: new FacebookApiConfig
                 {
                     Path = "/messages",
                     PageId = settings["PageId"],
                     AppId = settings["AppId"],
                     AppSecret = settings["AppSecret"],
+                    VerifyToken = settings["VerificationToken"],
                     PageAccessToken = settings["PageAccessToken"]
                 },
                 onActivityAsync: (activiy) =>

@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotBuilderChannelConnectorT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotBuilderChannelConnectorDemoAspNet", "BotBuilderChannelConnectorDemoAspNet\BotBuilderChannelConnectorDemoAspNet.csproj", "{BC939304-ADA5-4437-9420-0ACC0B9C6F17}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotBuilderChannelConnector.Owin", "BotBuilderChannelConnector.Owin\BotBuilderChannelConnector.Owin.csproj", "{8305C07A-9070-42D7-BB1F-89DCDC640EE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,10 @@ Global
 		{BC939304-ADA5-4437-9420-0ACC0B9C6F17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC939304-ADA5-4437-9420-0ACC0B9C6F17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC939304-ADA5-4437-9420-0ACC0B9C6F17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8305C07A-9070-42D7-BB1F-89DCDC640EE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8305C07A-9070-42D7-BB1F-89DCDC640EE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8305C07A-9070-42D7-BB1F-89DCDC640EE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8305C07A-9070-42D7-BB1F-89DCDC640EE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

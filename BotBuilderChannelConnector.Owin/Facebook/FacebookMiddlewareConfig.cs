@@ -9,8 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vossccp.BotBuilder.ChannelConnector.Facebook;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Facebook
+namespace Vossccp.BotBuilder.ChannelConnector.Owin.Facebook
 {
     public static class FacebookMiddlewareConfig
     {
