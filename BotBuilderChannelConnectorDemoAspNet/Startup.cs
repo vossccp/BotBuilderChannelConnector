@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Vossccp.BotBuilder.ChannelConnector.Facebook;
+using Vossccp.BotBuilder.ChannelConnector.Owin.Facebook;
 
 namespace Vossccp.BotBuilder.ChannelConnector.Demo.AspNet
 {
@@ -22,7 +23,7 @@ namespace Vossccp.BotBuilder.ChannelConnector.Demo.AspNet
             var settings = ConfigurationManager.AppSettings;
 
             appBuilder.UseFacebookMessenger(
-                config: new FacebookConfig
+                config: new FacebookApiConfig
                 {
                     Path = "/messages",
                     PageId = settings["PageId"],
@@ -31,9 +32,9 @@ namespace Vossccp.BotBuilder.ChannelConnector.Demo.AspNet
                     VerifyToken = settings["VerificationToken"],
                     PageAccessToken = settings["PageAccessToken"]
                 },
-                onActivityAsync: (activiy) =>
+                onActivityAsync: (activity) =>
                 {
-                    return Conversation.SendAsync(activiy, () => new EchoDialog());                    
+                    return Conversation.SendAsync(activity, () => new EchoDialog());                    
                 }
             );
         }

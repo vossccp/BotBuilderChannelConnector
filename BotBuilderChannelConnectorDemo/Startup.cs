@@ -28,9 +28,9 @@ namespace Vossccp.BotBuilder.ChannelConnector.Demo
                     VerifyToken = settings["VerificationToken"],
                     PageAccessToken = settings["PageAccessToken"]
                 },
-                onActivityAsync: (activiy) =>
+                onActivityAsync: (activity) =>
                 {
-                    return Conversation.SendAsync(activiy, () => new EchoDialog());
+                    return Conversation.SendAsync(activity, () => new EchoDialog());
                 }
             );
         }
