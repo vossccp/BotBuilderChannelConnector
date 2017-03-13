@@ -1,13 +1,17 @@
-﻿using Microsoft.Bot.Builder.Dialogs;
-using Owin;
-using System.Threading.Tasks;
-using Vossccp.BotBuilder.ChannelConnector.Facebook;
-using System.Configuration;
-using Autofac;
+﻿using Autofac;
+using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Internals;
 using Microsoft.Bot.Connector;
+using Owin;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using Vossccp.BotBuilder.ChannelConnector.Facebook;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Demo
+namespace Vossccp.BotBuilder.ChannelConnector.Demo.AspNet
 {
     public class Startup
     {
@@ -28,7 +32,7 @@ namespace Vossccp.BotBuilder.ChannelConnector.Demo
                 },
                 onActivityAsync: (activiy) =>
                 {
-                    return Conversation.SendAsync(activiy, () => new EchoDialog());
+                    return Conversation.SendAsync(activiy, () => new EchoDialog());                    
                 }
             );
         }

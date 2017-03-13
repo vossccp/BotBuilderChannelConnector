@@ -13,7 +13,8 @@ namespace Vossccp.BotBuilder.ChannelConnector.Facebook
         internal static IEnumerable<IMessageActivity> ToMessageActivities(this FacebookRequestMessage fbRequestMessage)
         {
             return fbRequestMessage.Entries
-                .SelectMany(e => e.Messaging)
+                //.Where(m => m.Messaging != null)
+                .SelectMany(e => e.Messaging)                
                 .Select(m => new Activity
                 {
                     Type = "message",

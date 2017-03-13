@@ -20,17 +20,19 @@ namespace Vossccp.BotBuilder.ChannelConnector.Facebook
     {
         readonly FacebookConfig config;
         readonly Func<IMessageActivity, Task> onActivityAsync;
+        readonly string path;
 
         public FacebookMessangerMiddleware(OwinMiddleware next, FacebookConfig config, Func<IMessageActivity, Task> onActivityAsync)
             : base(next)
         {
+            path = config.Path ?? "/";
             this.config = config;
             this.onActivityAsync = onActivityAsync;
         }
 
         public override async Task Invoke(IOwinContext context)
         {
-            if (context.Request.Uri.LocalPath.Equals("/messages", StringComparison.InvariantCultureIgnoreCase))
+            if (context.Request.Uri.LocalPath.Equals(path, StringComparison.InvariantCultureIgnoreCase))
             {
                 if (context.Request.Query["hub.mode"] == "subscribe")
                 {
@@ -45,12 +47,12 @@ namespace Vossccp.BotBuilder.ChannelConnector.Facebook
                         await MessageReceived(context);
                         return;
                     }
-                    catch(Exception exception)
+                    catch (Exception exception)
                     {
                         Trace.WriteLine(exception.Message);
                         Trace.WriteLine(exception.StackTrace);
 
-                        if(exception.InnerException!=null)
+                        if (exception.InnerException != null)
                         {
                             Trace.WriteLine(exception.InnerException.Message);
                         }
@@ -67,7 +69,7 @@ namespace Vossccp.BotBuilder.ChannelConnector.Facebook
         }
 
         async Task MessageReceived(IOwinContext context)
-        {            
+        {
             var content = await new StreamReader(context.Request.Body).ReadToEndAsync();
             var message = JsonConvert.DeserializeObject<FacebookRequestMessage>(content);
             var activities = message.ToMessageActivities();
@@ -75,7 +77,7 @@ namespace Vossccp.BotBuilder.ChannelConnector.Facebook
             foreach (var activity in activities)
             {
                 Trace.TraceInformation("Recieved activity {0}", activity.Id);
-                await onActivityAsync(activity);
+                await onActivityAsync(activity);                
             }
         }
 
@@ -89,6 +91,7 @@ namespace Vossccp.BotBuilder.ChannelConnector.Facebook
                 await context.Response.WriteAsync(context.Request.Query["hub.challenge"]);
                 context.Response.StatusCode = (int)HttpStatusCode.OK;
             }
+            else
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
             }

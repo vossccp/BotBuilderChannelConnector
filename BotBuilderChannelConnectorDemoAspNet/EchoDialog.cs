@@ -2,9 +2,11 @@
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using Vossccp.BotBuilder.ChannelConnector.Facebook;
+using System.Threading;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Demo
-{   
+namespace Vossccp.BotBuilder.ChannelConnector.Demo.AspNet
+{
     [Serializable]
     public class EchoDialog : IDialog<object>
     {
@@ -26,7 +28,7 @@ namespace Vossccp.BotBuilder.ChannelConnector.Demo
             }
             else
             {
-                await context.PostAsync($"{Count++}: You said {message.Text}");                 
+                await context.PostAsync($"{Count++}: You said {message.Text}");
             }
 
             context.Wait(MessageReceivedAsync);
