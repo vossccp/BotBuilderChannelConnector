@@ -32,6 +32,39 @@ namespace BotBuilderChannelConectorTests
         }
 
         [Fact]
+        public void CanConvertLocationQuickReply()
+        {
+            var activity = new Activity
+            {
+                Recipient = new ChannelAccount
+                {
+                    Id = "4711"
+                },
+                ChannelData = new FacebookMessage
+                (
+                    "Please enter your location",
+                    new List<FacebookQuickReply>
+                    {
+                        new FacebookQuickReply
+                        (
+                            FacebookQuickReply.ContentTypes.Location,
+                            default(string),
+                            default(string)
+                        )
+                    }
+                )
+            };
+
+            var fbMessages = activity.ToFacebookMessaging().ToList();
+            var fbMessage = fbMessages.First();
+
+            Assert.Equal(1, fbMessages.Count);
+            Assert.Equal("4711", fbMessage.Recipient.Id);
+            Assert.Equal("Please enter your location", fbMessage.Message.Text);
+            Assert.Equal(FacebookQuickReply.ContentTypes.Location, fbMessage.Message.QuickReplies.First().ContentType);
+        }
+
+        [Fact]
         public void CanConvertTyping()
         {
             var activity = new Activity
@@ -75,7 +108,7 @@ namespace BotBuilderChannelConectorTests
             Assert.Equal(1, fbMessages.Count);
             Assert.Equal("4711", fbMessage.Recipient.Id);
             Assert.Equal("quickreplies", fbMessage.Message.Text);
-            Assert.Equal(2, fbMessage.Message.QuickReplies.Count);
+            Assert.Equal(FacebookQuickReply.ContentTypes.Text, fbMessage.Message.QuickReplies.First().ContentType);
         }
 
         [Fact]
@@ -126,12 +159,19 @@ namespace BotBuilderChannelConectorTests
                         },
                         Buttons = new List<CardAction>
                         {
-                            new CardAction()
+                            new CardAction
                             {
                                 Value = "https://de.wikipedia.org/wiki/Deco",
-                                Type = "openUrl",
+                                Type = ActionTypes.OpenUrl,
+                                Title = "Get me to Deco"
+                            },
+                            new CardAction
+                            {
+                                Value = "Postback",
+                                Type = ActionTypes.PostBack,
                                 Title = "Get me to Deco"
                             }
+
                         }
                     }
                     .ToAttachment()
@@ -139,11 +179,13 @@ namespace BotBuilderChannelConectorTests
             };
 
             var fbMessages = activity.ToFacebookMessaging().ToList();
+            var fbMessage = fbMessages.First();
+            var template = fbMessage.Message.Attachment.Payload.Elements.First();
 
             Assert.Equal(1, fbMessages.Count);
             Assert.Equal("4711", fbMessages.First().Recipient.Id);
-            Assert.Null(fbMessages.First().Message.Text);
-            Assert.Equal(1, fbMessages.First().Message.Attachment.Payload.Elements.Count);
+            Assert.Null(fbMessage.Message.Text);
+            Assert.Equal("postback", template.Buttons[1].Type);
         }
     }
 }

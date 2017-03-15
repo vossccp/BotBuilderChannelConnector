@@ -85,7 +85,7 @@ namespace Vossccp.BotBuilder.ChannelConnector.Facebook
 
         static FacebookButton ToDefaultAction(CardAction cardAction)
         {
-            if(cardAction == null)
+            if (cardAction == null)
             {
                 return null;
             }
@@ -97,7 +97,7 @@ namespace Vossccp.BotBuilder.ChannelConnector.Facebook
             }
 
             return new FacebookButton
-            {                
+            {
                 Type = "web_url",
                 Url = url
             };
@@ -115,18 +115,26 @@ namespace Vossccp.BotBuilder.ChannelConnector.Facebook
 
         static FacebookButton ToFacebookButton(CardAction cardAction)
         {
-            var url = string.Empty;
-            if (cardAction.Value is string)
+            if(cardAction.Type == ActionTypes.OpenUrl)
             {
-                url = cardAction.Value as string;
+                return new FacebookButton
+                {
+                    Type = "web_url",
+                    Title = cardAction.Title,
+                    Url = cardAction.Value?.ToString()
+                };
             }
 
-            return new FacebookButton
+            if(cardAction.Type==ActionTypes.PostBack)
             {
-                Type = "web_url",
-                Title = cardAction.Title,
-                Url = url
-            };
+                return new FacebookButton
+                {
+                    Type = "postback",
+                    Title = cardAction.Title,
+                    Payload = cardAction.Value?.ToString()
+                };
+            }
+            throw new NotSupportedException($"{cardAction.Type} not supported");
         }
     }
 }

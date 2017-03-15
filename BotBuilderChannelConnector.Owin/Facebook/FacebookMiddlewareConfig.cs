@@ -17,17 +17,7 @@ namespace Vossccp.BotBuilder.ChannelConnector.Owin.Facebook
     {
         public static IAppBuilder UseFacebookMessenger(this IAppBuilder appBuilder, FacebookConfig config, Func<IMessageActivity, Task> onActivityAsync)
         {
-            var builder = new ContainerBuilder();
-
-            builder.Register(c => config)
-                .SingleInstance();
-
-            builder
-                .Register(c => new DirectConnectorClientFactory(c.Resolve<FacebookConfig>()))
-                .As<IConnectorClientFactory>()
-                .InstancePerLifetimeScope();
-
-            builder.Update(Conversation.Container);
+            FacebookMessenger.Configure(config);
 
             appBuilder.Use<FacebookMessangerMiddleware>(config, onActivityAsync);
 

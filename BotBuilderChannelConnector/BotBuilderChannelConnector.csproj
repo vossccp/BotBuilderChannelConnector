@@ -48,6 +48,7 @@
     <Compile Include="Facebook\AttachmentsExtensions.cs" />
     <Compile Include="Facebook\FacebookClient.cs" />
     <Compile Include="Facebook\FacebookConfig.cs" />
+    <Compile Include="Facebook\FacebookMessenger.cs" />
     <Compile Include="Facebook\Schema\FacebookAttachment.cs" />
     <Compile Include="Facebook\Schema\FacebookButton.cs" />
     <Compile Include="Facebook\Schema\FacebookElement.cs" />

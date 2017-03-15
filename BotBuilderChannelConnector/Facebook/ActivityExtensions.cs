@@ -79,7 +79,7 @@ namespace Vossccp.BotBuilder.ChannelConnector.Facebook
                     QuickReplies = facebookMessage.QuickReplies
                     .Select(q => new FacebookQuickReply
                     {
-                        ContentType = "text",
+                        ContentType = q.ContentType,
                         Title = q.Title,
                         Payload = q.Payload
                     })
