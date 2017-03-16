@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotBuilderChannelConnectorT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotBuilderChannelConnector.Owin", "BotBuilderChannelConnector.Owin\BotBuilderChannelConnector.Owin.csproj", "{8305C07A-9070-42D7-BB1F-89DCDC640EE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotBuilderChannelConnectorDemoAspNet", "TestApp\BotBuilderChannelConnectorDemoAspNet.csproj", "{ADFE2C81-6C3F-4D1E-8407-53D5EFE20E53}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotBuilderChannelConnectorDemoAspNet", "BotBuilderChannelConnectorDemoAspNet\BotBuilderChannelConnectorDemoAspNet.csproj", "{ADFE2C81-6C3F-4D1E-8407-53D5EFE20E53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
