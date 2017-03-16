@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Facebook.Schema
+namespace BotBuilder.ChannelConnector.Facebook.Schema
 {
     // see: https://developers.facebook.com/docs/messenger-platform/send-api-reference/generic-template
 

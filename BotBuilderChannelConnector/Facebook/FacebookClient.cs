@@ -10,10 +10,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.ConnectorEx;
 using Newtonsoft.Json.Linq;
-using Vossccp.BotBuilder.ChannelConnector.Facebook.Schema;
+using BotBuilder.ChannelConnector.Facebook.Schema;
 using System.Diagnostics;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Facebook
+namespace BotBuilder.ChannelConnector.Facebook
 {
     public class FacebookClient
     {

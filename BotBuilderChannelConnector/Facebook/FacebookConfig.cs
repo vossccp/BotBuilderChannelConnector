@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Facebook
+namespace BotBuilder.ChannelConnector.Facebook
 {
     public class FacebookConfig
     {

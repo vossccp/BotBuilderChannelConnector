@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Facebook.Schema
+namespace BotBuilder.ChannelConnector.Facebook.Schema
 {
     public class FacebookOutboundMessaging
     {

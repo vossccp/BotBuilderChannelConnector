@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Web;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Facebook.Schema
+namespace BotBuilder.ChannelConnector.Facebook.Schema
 {
     // This is the message, facebook sends to us
     public class FacebookRequestMessage

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Vossccp.BotBuilder.ChannelConnector.Facebook;
+using BotBuilder.ChannelConnector.Facebook;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Owin.Facebook
+namespace BotBuilder.ChannelConnector.Owin.Facebook
 {
     public class FacebookApiConfig : FacebookConfig
     {

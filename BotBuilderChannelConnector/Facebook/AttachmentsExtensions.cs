@@ -3,9 +3,9 @@ using Microsoft.Bot.Connector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Vossccp.BotBuilder.ChannelConnector.Facebook.Schema;
+using BotBuilder.ChannelConnector.Facebook.Schema;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Facebook
+namespace BotBuilder.ChannelConnector.Facebook
 {
     public static class AttachmentsExtensions
     {

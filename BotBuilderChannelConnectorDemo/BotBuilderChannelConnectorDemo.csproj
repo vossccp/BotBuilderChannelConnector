@@ -66,7 +66,7 @@
     </ProjectReference>
     <ProjectReference Include="..\BotBuilderChannelConnector\BotBuilderChannelConnector.csproj">
       <Project>{31610fb9-82f3-4d96-9c7b-eafecd5718f1}</Project>
-      <Name>BotBuilderCannelConnector</Name>
+      <Name>BotBuilderChannelConnector</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

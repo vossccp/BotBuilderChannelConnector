@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Microsoft.Bot.Connector;
-using Vossccp.BotBuilder.ChannelConnector.Facebook;
+using BotBuilder.ChannelConnector.Facebook;
 
-namespace Vossccp.BotBuilder.ChannelConnector
+namespace BotBuilder.ChannelConnector
 {
     public class DirectConnectorClientFactory : IConnectorClientFactory
     {

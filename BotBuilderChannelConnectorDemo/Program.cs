@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Owin.Hosting;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Demo
+namespace BotBuilder.ChannelConnector.Demo
 {
     class Program
     {

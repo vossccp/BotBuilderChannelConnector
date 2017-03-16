@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Facebook.Schema
+namespace BotBuilder.ChannelConnector.Facebook.Schema
 {
     public class FacebookInboundMessage
     {

@@ -1,40 +1,30 @@
-﻿using Autofac;
-using Microsoft.Bot.Builder.Dialogs;
+﻿using Owin;
+using System.Configuration;
+using BotBuilder.ChannelConnector.Owin.Facebook;
+using Autofac;
 using Microsoft.Bot.Builder.Dialogs.Internals;
 using Microsoft.Bot.Connector;
-using Owin;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using Vossccp.BotBuilder.ChannelConnector.Facebook;
-using Vossccp.BotBuilder.ChannelConnector.Owin.Facebook;
+using Microsoft.Bot.Builder.Dialogs;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Demo.AspNet
+namespace BotBuilderChannelConnector.Demo.AspNet
 {
     public class Startup
     {
-        public void Configuration(IAppBuilder appBuilder)
+        public void Configuration(IAppBuilder app)
         {
             RegisterInMemoryBotStore();
 
             var settings = ConfigurationManager.AppSettings;
 
-            appBuilder.UseFacebookMessenger(
+            app.UseFacebookMessenger(
                 config: new FacebookApiConfig
                 {
-                    Path = "/messages",
-                    PageId = settings["PageId"],
-                    AppId = settings["AppId"],
-                    AppSecret = settings["AppSecret"],
-                    VerifyToken = settings["VerificationToken"],
-                    PageAccessToken = settings["PageAccessToken"]
+                    Path = "/messages",                    
+                    VerifyToken = settings["VerificationToken"]
                 },
                 onActivityAsync: (activity) =>
                 {
-                    return Conversation.SendAsync(activity, () => new EchoDialog());                    
+                    return Conversation.SendAsync(activity, () => new EchoDialog());
                 }
             );
         }

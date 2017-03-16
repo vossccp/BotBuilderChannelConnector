@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
-using Vossccp.BotBuilder.ChannelConnector.Facebook;
+using BotBuilder.ChannelConnector.Facebook;
 using System.Threading;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Demo.AspNet
+namespace BotBuilderChannelConnector.Demo.AspNet
 {
     [Serializable]
     public class EchoDialog : IDialog<object>

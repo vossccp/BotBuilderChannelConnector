@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Demo
+namespace BotBuilder.ChannelConnector.Demo
 {
     [Serializable]
     public class DemoDialog : IDialog<object>

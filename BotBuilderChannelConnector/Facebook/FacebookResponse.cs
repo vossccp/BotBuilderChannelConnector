@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Facebook
+namespace BotBuilder.ChannelConnector.Facebook
 {
     // response from Facebook upon successfull submit of a message
     public class FacebookResponse

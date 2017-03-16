@@ -5,9 +5,9 @@ using System.Linq;
 using System.Web;
 using Microsoft.Rest;
 using Newtonsoft.Json;
-using Vossccp.BotBuilder.ChannelConnector.Facebook;
+using BotBuilder.ChannelConnector.Facebook;
 
-namespace Vossccp.BotBuilder.ChannelConnector
+namespace BotBuilder.ChannelConnector
 {
     public class DirectConnectorClient : IConnectorClient
     {

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 
-namespace Vossccp.BotBuilder.ChannelConnector.Demo
+namespace BotBuilder.ChannelConnector.Demo
 {   
     [Serializable]
     public class EchoDialog : IDialog<object>
