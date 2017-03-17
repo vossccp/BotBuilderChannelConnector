@@ -1,6 +1,6 @@
 ﻿using Owin;
 using System.Configuration;
-using BotBuilder.ChannelConnector.Owin.Facebook;
+using Bot.Builder.ChannelConnector.Owin.Facebook;
 using Autofac;
 using Microsoft.Bot.Builder.Dialogs.Internals;
 using Microsoft.Bot.Connector;

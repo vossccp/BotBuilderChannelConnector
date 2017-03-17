@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{0728FC37-5A8A-4AF7-AA02-A6655D3DED57}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Vossccp.BotBuilder.ChannelConnector.Demo</RootNamespace>
+    <RootNamespace>Bot.Builder.ChannelConnector.Demo</RootNamespace>
     <AssemblyName>BotBuilderChannelConnectorDemo</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Text;
-using BotBuilder.ChannelConnector.Facebook;
+using Bot.Builder.ChannelConnector.Facebook;
 
-namespace BotBuilder.ChannelConnector
+namespace Bot.Builder.ChannelConnector
 {
     public class DirectConversation : IConversations
     {

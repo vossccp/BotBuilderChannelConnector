@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BotBuilder.ChannelConnector.Demo
+namespace Bot.Builder.ChannelConnector.Demo
 {
     [Serializable]
     public class DemoDialog : IDialog<object>

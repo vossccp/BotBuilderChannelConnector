@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BotBuilder.ChannelConnector.Facebook
+namespace Bot.Builder.ChannelConnector.Facebook
 {
     public static class FacebookMessenger
     {

@@ -7,7 +7,7 @@
     <ProjectGuid>{31610FB9-82F3-4D96-9C7B-EAFECD5718F1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BotBuilder.ChannelConnector</RootNamespace>
+    <RootNamespace>Bot.Builder.ChannelConnector</RootNamespace>
     <AssemblyName>BotBuilderCannelConnector</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />
+    <None Include="paket.template" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Choose>

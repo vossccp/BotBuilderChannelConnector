@@ -6,10 +6,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-using BotBuilder.ChannelConnector.Facebook;
-using BotBuilder.ChannelConnector.Facebook.Schema;
+using Bot.Builder.ChannelConnector.Facebook;
+using Bot.Builder.ChannelConnector.Facebook.Schema;
 
-namespace BotBuilder.ChannelConnector.Owin.Facebook
+namespace Bot.Builder.ChannelConnector.Owin.Facebook
 {
     public class FacebookMessangerMiddleware : OwinMiddleware
     {

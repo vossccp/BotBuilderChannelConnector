@@ -1,14 +1,14 @@
 ﻿using Microsoft.Bot.Builder.Dialogs;
 using Owin;
 using System.Threading.Tasks;
-using BotBuilder.ChannelConnector.Facebook;
+using Bot.Builder.ChannelConnector.Facebook;
 using System.Configuration;
 using Autofac;
 using Microsoft.Bot.Builder.Dialogs.Internals;
 using Microsoft.Bot.Connector;
-using BotBuilder.ChannelConnector.Owin.Facebook;
+using Bot.Builder.ChannelConnector.Owin.Facebook;
 
-namespace BotBuilder.ChannelConnector.Demo
+namespace Bot.Builder.ChannelConnector.Demo
 {
     public class Startup
     {

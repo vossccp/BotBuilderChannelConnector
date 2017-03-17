@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
-using BotBuilder.ChannelConnector.Facebook;
+using Bot.Builder.ChannelConnector.Facebook;
 using System.Threading;
 
 namespace BotBuilderChannelConnector.Demo.AspNet

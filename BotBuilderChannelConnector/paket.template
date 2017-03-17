@@ -1,0 +1,8 @@
+﻿type project
+licenseUrl http://opensource.org/licenses/MIT
+authors Carsten Voss
+projectUrl https://github.com/vossccp/BotBuilderChannelConnector
+copyright Carsten Voss
+tags Bot Builder
+id Bot.Builder.ChannelConnector
+description Connect BotBuilder projects without the need to go through the MS bot development portal

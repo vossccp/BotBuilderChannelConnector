@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace BotBuilder.ChannelConnector.Facebook.Schema
+namespace Bot.Builder.ChannelConnector.Facebook.Schema
 {
     public class FacebookQuickReply
     {
