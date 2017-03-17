@@ -7,7 +7,7 @@
     <ProjectGuid>{0728FC37-5A8A-4AF7-AA02-A6655D3DED57}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Bot.Builder.ChannelConnector.Demo</RootNamespace>
-    <AssemblyName>BotBuilderChannelConnectorDemo</AssemblyName>
+    <AssemblyName>Bot.Builder.ChannelConnector.Demo</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -60,9 +60,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BotBuilderChannelConnector.Owin\BotBuilderChannelConnector.Owin.csproj">
+    <ProjectReference Include="..\BotBuilderChannelConnectorOwin\BotBuilderChannelConnectorOwin.csproj">
       <Project>{8305c07a-9070-42d7-bb1f-89dcdc640ee7}</Project>
-      <Name>BotBuilderChannelConnector.Owin</Name>
+      <Name>BotBuilderChannelConnectorOwin</Name>
     </ProjectReference>
     <ProjectReference Include="..\BotBuilderChannelConnector\BotBuilderChannelConnector.csproj">
       <Project>{31610fb9-82f3-4d96-9c7b-eafecd5718f1}</Project>

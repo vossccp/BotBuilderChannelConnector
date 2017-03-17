@@ -11,26 +11,27 @@ namespace Bot.Builder.ChannelConnector.Facebook
     {
         public static FacebookElement ToFacebookElement(this Attachment attachment)
         {
-            if (attachment.ContentType == HeroCard.ContentType)
+            switch (attachment.ContentType)
             {
-                var card = attachment.Content as HeroCard;
+                case HeroCard.ContentType:
+                    {
+                        var card = attachment.Content as HeroCard;
 
-                return new FacebookElement
-                {
-                    Title = card.Title,
-                    Subtitle = card.Subtitle,
-                    ImageUrl = ToImageUrl(card.Images),
-                    DefaultAction = ToDefaultAction(card.Tap),
-                    Buttons = card.Buttons?.Select(ToFacebookButton).ToList()
-                };
+                        return new FacebookElement
+                        {
+                            Title = card.Title,
+                            Subtitle = card.Subtitle,
+                            ImageUrl = ToImageUrl(card.Images),
+                            DefaultAction = ToDefaultAction(card.Tap),
+                            Buttons = card.Buttons?.Select(ToFacebookButton).ToList()
+                        };
+                    }
+                case KeyboardCard.ContentType:
+                    // handled directly as channel data
+                    throw new NotSupportedException(KeyboardCard.ContentType);
+                default:
+                    return null;
             }
-            if (attachment.ContentType == KeyboardCard.ContentType)
-            {
-                // handled directly as channel data
-                throw new NotSupportedException(KeyboardCard.ContentType);
-            }
-
-            return null;
         }
 
         public static FacebookAttachment ToLinkAttachment(this Attachment attachment)
@@ -115,26 +116,25 @@ namespace Bot.Builder.ChannelConnector.Facebook
 
         static FacebookButton ToFacebookButton(CardAction cardAction)
         {
-            if(cardAction.Type == ActionTypes.OpenUrl)
+            switch (cardAction.Type)
             {
-                return new FacebookButton
-                {
-                    Type = "web_url",
-                    Title = cardAction.Title,
-                    Url = cardAction.Value?.ToString()
-                };
+                case ActionTypes.OpenUrl:
+                    return new FacebookButton
+                    {
+                        Type = "web_url",
+                        Title = cardAction.Title,
+                        Url = cardAction.Value?.ToString()
+                    };
+                case ActionTypes.PostBack:
+                    return new FacebookButton
+                    {
+                        Type = "postback",
+                        Title = cardAction.Title,
+                        Payload = cardAction.Value?.ToString()
+                    };
+                default:
+                    throw new NotSupportedException($"{cardAction.Type} not supported");
             }
-
-            if(cardAction.Type==ActionTypes.PostBack)
-            {
-                return new FacebookButton
-                {
-                    Type = "postback",
-                    Title = cardAction.Title,
-                    Payload = cardAction.Value?.ToString()
-                };
-            }
-            throw new NotSupportedException($"{cardAction.Type} not supported");
         }
     }
 }

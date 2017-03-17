@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Bot.Builder.ChannelConnector.Owin</RootNamespace>
-    <AssemblyName>BotBuilderChannelConnector.Owin</AssemblyName>
+    <AssemblyName>Bot.Builder.ChannelConnector.Owin</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

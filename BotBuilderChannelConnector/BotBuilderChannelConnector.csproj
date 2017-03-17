@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Bot.Builder.ChannelConnector</RootNamespace>
-    <AssemblyName>BotBuilderCannelConnector</AssemblyName>
+    <AssemblyName>Bot.Builder.ChannelConnector</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

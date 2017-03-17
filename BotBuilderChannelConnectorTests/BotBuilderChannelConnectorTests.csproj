@@ -8,7 +8,7 @@
     <ProjectGuid>{1078CEEF-3E82-4A27-9337-553D8597D546}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Bot.Builder.ChannelConnector.Tests</RootNamespace>
-    <AssemblyName>BotBuilderChannelConnectorTests</AssemblyName>
+    <AssemblyName>Bot.Builder.ChannelConnector.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

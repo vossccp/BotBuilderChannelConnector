@@ -57,38 +57,34 @@ namespace Bot.Builder.ChannelConnector.Facebook
 
         static FacebookOutboundMessaging CreateFromChannelData(string recipientId, object channelData)
         {
-            var message = channelData as FacebookOutboundMessage;
-            if (message != null)
+            switch (channelData)
             {
-                return new FacebookOutboundMessaging
-                {
-                    Recipient = new FacebookRecipient
+                case FacebookOutboundMessage message:
+                    return new FacebookOutboundMessaging
                     {
-                        Id = recipientId
-                    },
-                    Message = message
-                };
-            }
-
-            var facebookMessage = channelData as Microsoft.Bot.Builder.ConnectorEx.FacebookMessage;
-            if (facebookMessage != null)
-            {
-                return CreateFromChannelData(recipientId, new FacebookOutboundMessage
-                {
-                    Text = facebookMessage.Text,
-                    QuickReplies = facebookMessage.QuickReplies
-                    .Select(q => new FacebookQuickReply
+                        Recipient = new FacebookRecipient
+                        {
+                            Id = recipientId
+                        },
+                        Message = message
+                    };
+                case Microsoft.Bot.Builder.ConnectorEx.FacebookMessage facebookMessage:
+                    return CreateFromChannelData(recipientId, new FacebookOutboundMessage
                     {
-                        ContentType = q.ContentType,
-                        Title = q.Title,
-                        Payload = q.Payload
-                    })
-                    .ToList()
-                });
+                        Text = facebookMessage.Text,
+                        QuickReplies = facebookMessage.QuickReplies
+                        .Select(q => new FacebookQuickReply
+                        {
+                            ContentType = q.ContentType,
+                            Title = q.Title,
+                            Payload = q.Payload
+                        })
+                        .ToList()
+                    });
+                default:
+                    // TODO: we might want to supprt JSON as string
+                    throw new NotSupportedException($"{channelData.GetType()} not supported");
             }
-
-            // TODO: we might want to supprt JSON as string
-            throw new NotSupportedException($"{channelData.GetType()} not supported");
         }
 
         static IEnumerable<FacebookOutboundMessaging> FromAttachments(string recipientId, IList<Attachment> attachments)
