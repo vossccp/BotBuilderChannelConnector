@@ -20,7 +20,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
                 {
                     yield return new FacebookOutboundMessaging
                     {
-                        Recipient = new FacebookRecipient
+                        Recipient = new FacebookAccount
                         {
                             Id = activity.Recipient.Id
                         },
@@ -33,7 +33,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
                     {
                         yield return new FacebookOutboundMessaging
                         {
-                            Recipient = new FacebookRecipient
+                            Recipient = new FacebookAccount
                             {
                                 Id = activity.Recipient.Id
                             },
@@ -62,7 +62,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
                 case FacebookOutboundMessage message:
                     return new FacebookOutboundMessaging
                     {
-                        Recipient = new FacebookRecipient
+                        Recipient = new FacebookAccount
                         {
                             Id = recipientId
                         },
@@ -118,7 +118,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
             {
                 yield return new FacebookOutboundMessaging
                 {
-                    Recipient = new FacebookRecipient
+                    Recipient = new FacebookAccount
                     {
                         Id = recipientId
                     },
@@ -143,7 +143,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
                 {
                     yield return new FacebookOutboundMessaging
                     {
-                        Recipient = new FacebookRecipient
+                        Recipient = new FacebookAccount
                         {
                             Id = recipientId
                         },

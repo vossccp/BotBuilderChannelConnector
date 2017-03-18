@@ -10,7 +10,7 @@ namespace Bot.Builder.ChannelConnector.Facebook.Schema
     public class FacebookOutboundMessaging
     {
         [JsonProperty("recipient")]
-        public FacebookRecipient Recipient { get; set; }
+        public FacebookAccount Recipient { get; set; }
         [JsonProperty("sender_action")]
         public string SenderAction { get; set; }
         [JsonProperty("message")]

@@ -30,7 +30,7 @@ namespace Bot.Builder.ChannelConnector.Demo
                 },
                 onActivityAsync: (activity) =>
                 {
-                    return Conversation.SendAsync(activity, () => new EchoDialog());
+                    return Conversation.SendAsync(activity, () => new DemoDialog());
                 }
             );
         }

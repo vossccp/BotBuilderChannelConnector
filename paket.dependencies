@@ -7,7 +7,6 @@ nuget Owin
 nuget Microsoft.Owin.SelfHost
 nuget Microsoft.Owin.Host.SystemWeb
 nuget Microsoft.Bot.Builder
-nuget NuGet.CommandLine
 
 group test
 	framework: net46

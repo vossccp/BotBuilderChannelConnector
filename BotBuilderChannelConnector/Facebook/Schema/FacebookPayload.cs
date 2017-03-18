@@ -11,5 +11,7 @@ namespace Bot.Builder.ChannelConnector.Facebook.Schema
         public string TemplateType { get; set; }
         [JsonProperty("elements")]
         public List<FacebookElement> Elements { get; set; }
+        [JsonProperty("coordinates")]
+        public FacebookCoordinates Coordinates { get; set; }
     }
 }

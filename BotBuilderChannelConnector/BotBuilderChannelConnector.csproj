@@ -49,8 +49,10 @@
     <Compile Include="Facebook\FacebookClient.cs" />
     <Compile Include="Facebook\FacebookConfig.cs" />
     <Compile Include="Facebook\FacebookMessenger.cs" />
+    <Compile Include="Facebook\Schema\FacebookAccount.cs" />
     <Compile Include="Facebook\Schema\FacebookAttachment.cs" />
     <Compile Include="Facebook\Schema\FacebookButton.cs" />
+    <Compile Include="Facebook\Schema\FacebookCoordinates.cs" />
     <Compile Include="Facebook\Schema\FacebookElement.cs" />
     <Compile Include="Facebook\Schema\FacebookEntry.cs" />
     <Compile Include="Facebook\Schema\FacebookInboundMessage.cs" />
@@ -59,11 +61,9 @@
     <Compile Include="Facebook\Schema\FacebookOutboundMessaging.cs" />
     <Compile Include="Facebook\Schema\FacebookPayload.cs" />
     <Compile Include="Facebook\Schema\FacebookQuickReply.cs" />
-    <Compile Include="Facebook\Schema\FacebookRecipient.cs" />
     <Compile Include="Facebook\Schema\FacebookRequestMessage.cs" />
     <Compile Include="Facebook\FacebookResponse.cs" />
     <Compile Include="Facebook\MessageActivityExtensions.cs" />
-    <Compile Include="Facebook\Schema\FacebookSender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

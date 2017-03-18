@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
 using Bot.Builder.ChannelConnector.Facebook.Schema;
+using Newtonsoft.Json.Linq;
 
 namespace Bot.Builder.ChannelConnector.Facebook
 {
@@ -14,7 +15,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
         {
             return fbRequestMessage.Entries
                 //.Where(m => m.Messaging != null)
-                .SelectMany(e => e.Messaging)                
+                .SelectMany(e => e.Messaging)
                 .Select(m => new Activity
                 {
                     Type = "message",
@@ -47,7 +48,23 @@ namespace Bot.Builder.ChannelConnector.Facebook
                                 ContentType = a.Type,
                                 ContentUrl = a.Payload.Url
                             })
-                            .ToList()
+                            .ToList(),
+
+                    Entities = m.Message.Attachments?
+                             .Where(a => a.Type == "location")
+                             .Select(a => new Entity("Place")
+                             {
+                                 Properties = JObject.FromObject(new
+                                 {
+                                     Type = "Place",
+                                     Geo = new GeoCoordinates
+                                     {
+                                         Latitude = a.Payload.Coordinates.Lat,
+                                         Longitude = a.Payload.Coordinates.Long
+                                     }
+                                 })
+                             })
+                             .ToList()
                 });
         }
     }

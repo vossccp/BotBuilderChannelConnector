@@ -1,4 +1,5 @@
-﻿using Microsoft.Bot.Builder.Dialogs;
+﻿using Microsoft.Bot.Builder.ConnectorEx;
+using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace Bot.Builder.ChannelConnector.Demo
         public async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> argument)
         {
             var message = await argument;
-            var text = message.Text.ToLower();
+            var text = message.Text?.ToLower();
 
             if ("keyboard".Equals(text))
             {
@@ -33,6 +34,29 @@ namespace Bot.Builder.ChannelConnector.Demo
                 var typing = context.MakeMessage();
                 typing.Type = "typing";
                 await context.PostAsync(typing);
+            }
+            else if("location".Equals(text))
+            {
+                var reply = context.MakeMessage();
+
+                reply.ChannelData = new FacebookMessage
+                (
+                    "Please submit your location",
+                    new List<FacebookQuickReply>
+                    {
+                        // If content_type is location, title and payload are not used
+                        // see https://developers.facebook.com/docs/messenger-platform/send-api-reference/quick-replies#fields
+                        // for more information.
+                        new FacebookQuickReply
+                        (
+                            FacebookQuickReply.ContentTypes.Location,
+                            default(string),
+                            default(string)
+                        )
+                    }
+                );
+
+                await context.PostAsync(reply);
             }
             else if ("hero".Equals(text))
             {
