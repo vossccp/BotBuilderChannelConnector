@@ -12,10 +12,9 @@ namespace Bot.Builder.ChannelConnector.Tests
 {
     public class FacebookMessageToActivityTests
     {
-        [Fact]
-        public void CanConvertTextMessage()
+        static FacebookRequestMessage CreateRequestMessage(FacebookInboundMessage message, string senderId = "1", string recipientId = "2")
         {
-            var fbMessage = new FacebookRequestMessage
+            return new FacebookRequestMessage
             {
                 Entries = new[]
                 {
@@ -27,24 +26,34 @@ namespace Bot.Builder.ChannelConnector.Tests
                             {
                                 Sender = new FacebookAccount
                                 {
-                                    Id = "1"
+                                    Id = senderId
                                 },
                                 Recipient = new FacebookAccount
                                 {
-                                    Id = "2"
+                                    Id = recipientId
                                 },
-                                Message = new FacebookInboundMessage
-                                {
-                                    Mid = "1",
-                                    Text = "Hello"
-                                }
+                                Message = message
                             }
                         }
                     }
                 }
             };
+        }
 
-            var activities = fbMessage.ToMessageActivities().ToList();
+
+        [Fact]
+        public void CanConvertTextMessage()
+        {
+            var fbMessage = new FacebookInboundMessage
+            {
+                Mid = "1",
+                Text = "Hello"
+            };
+
+            var activities = CreateRequestMessage(fbMessage)
+                .ToMessageActivities()
+                .ToList();
+
             var activity = activities.First();
 
             Assert.Equal(1, activities.Count);
@@ -54,50 +63,27 @@ namespace Bot.Builder.ChannelConnector.Tests
         [Fact]
         public void CanConvertLocation()
         {
-            var fbMessage = new FacebookRequestMessage
+            var fbMessage = new FacebookInboundMessage
             {
-                Entries = new[]
+                Mid = "1",
+                Attachments = new[]
                 {
-                    new FacebookEntry
+                    new FacebookAttachment
                     {
-                        Messaging = new []
+                        Type = "location",
+                        Payload = new FacebookPayload
                         {
-                            new FacebookInboundMessaging
+                            Coordinates = new FacebookCoordinates
                             {
-                                Sender = new FacebookAccount
-                                {
-                                    Id = "1"
-                                },
-                                Recipient = new FacebookAccount
-                                {
-                                    Id = "2"
-                                },
-                                Message = new FacebookInboundMessage
-                                {
-                                    Mid = "1",
-                                    Attachments = new []
-                                    {
-                                        new FacebookAttachment
-                                        {
-                                            Type = "location",
-                                            Payload = new FacebookPayload
-                                            {
-                                                Coordinates = new FacebookCoordinates
-                                                {
-                                                    Lat = 1d,
-                                                    Long = 1d
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                Lat = 1d,
+                                Long = 1d
                             }
                         }
                     }
                 }
             };
 
-            var activities = fbMessage.ToMessageActivities().ToList();
+            var activities = CreateRequestMessage(fbMessage).ToMessageActivities().ToList();
             var activity = activities.First();
 
             var place = activity.Entities
