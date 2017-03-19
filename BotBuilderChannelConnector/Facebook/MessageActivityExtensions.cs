@@ -14,7 +14,6 @@ namespace Bot.Builder.ChannelConnector.Facebook
         public static IEnumerable<IMessageActivity> ToMessageActivities(this FacebookRequestMessage fbRequestMessage)
         {
             return fbRequestMessage.Entries
-                //.Where(m => m.Messaging != null)
                 .SelectMany(e => e.Messaging)
                 .Select(m => new Activity
                 {

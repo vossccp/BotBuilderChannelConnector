@@ -35,7 +35,7 @@ namespace Bot.Builder.ChannelConnector.Demo
                 typing.Type = "typing";
                 await context.PostAsync(typing);
             }
-            else if("location".Equals(text))
+            else if ("location".Equals(text))
             {
                 var reply = context.MakeMessage();
 
@@ -86,7 +86,7 @@ namespace Bot.Builder.ChannelConnector.Demo
                     heroCard.ToAttachment(),
                     heroCard.ToAttachment()
                 };
-                
+
                 await context.PostAsync(reply);
             }
             else if ("attachment".Equals(text))

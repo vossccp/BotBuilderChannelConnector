@@ -3,6 +3,7 @@ using Microsoft.Bot.Connector;
 using Microsoft.Rest;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
@@ -15,7 +16,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
         const string Url = "https://graph.facebook.com/v2.6/me/messages?access_token=";
         const string GraphUrl = "https://graph.facebook.com/v2.8";
 
-        readonly string pageAccessToken;
+        readonly string pageAccessToken;        
 
         static JsonSerializerSettings serializerSettings = new JsonSerializerSettings
         {
@@ -30,7 +31,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
                 throw new ArgumentNullException(nameof(pageAccessToken));
             }
 
-            this.pageAccessToken = pageAccessToken;
+            this.pageAccessToken = pageAccessToken;            
         }
 
         public async Task<HttpOperationResponse<object>> SendAsync(Activity activity)
