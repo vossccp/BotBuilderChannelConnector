@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Facebook\FacebookApiConfig.cs" />
     <Compile Include="Facebook\FacebookMessangerMiddleware.cs" />
     <Compile Include="Facebook\FacebookMiddlewareConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

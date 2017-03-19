@@ -9,6 +9,8 @@ namespace Bot.Builder.ChannelConnector.Facebook
 {
     public class FacebookConfig
     {
+        public string Path { get; set; }
+        public string VerifyToken { get; set; }
         public string AppSecret { get; set; }
         public string PageAccessToken { get; set; }
         public string PageId { get; set; }

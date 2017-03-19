@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BotConnectorException.cs" />
     <Compile Include="DirectConnectorClient.cs" />
     <Compile Include="DirectConnectorClientFactory.cs" />
     <Compile Include="DirectConversation.cs" />

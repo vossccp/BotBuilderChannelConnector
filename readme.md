@@ -16,7 +16,7 @@ The ChannelConnector is designed as a Owin Middleware and can be setup (for Face
 
 ```c#
 appBuilder.UseFacebookMessenger(
-	config: new FacebookApiConfig
+	config: new FacebookConfig
 	{
 		Path = "/messages",
 		PageId = "your facebook page id",

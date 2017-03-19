@@ -17,9 +17,16 @@ namespace Bot.Builder.ChannelConnector.Owin.Facebook
     {
         public static IAppBuilder UseFacebookMessenger(this IAppBuilder appBuilder, FacebookConfig config, Func<IMessageActivity, Task> onActivityAsync)
         {
-            FacebookMessenger.Configure(config);
+            return appBuilder.UseFacebookMessenger(new[] { config }, onActivityAsync);
+        }
 
-            appBuilder.Use<FacebookMessangerMiddleware>(config, onActivityAsync);
+        // adds support for multiple Facebook bots: each config element represents one bot
+        // All bots can then be handled through one entry point defined in onActivityAsync
+        public static IAppBuilder UseFacebookMessenger(this IAppBuilder appBuilder, FacebookConfig[] configs, Func<IMessageActivity, Task> onActivityAsync)
+        {
+            FacebookMessenger.Configure(configs);
+
+            appBuilder.Use<FacebookMessangerMiddleware>(configs, onActivityAsync);
 
             return appBuilder;
         }

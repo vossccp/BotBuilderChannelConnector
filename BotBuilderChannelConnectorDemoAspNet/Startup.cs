@@ -5,6 +5,7 @@ using Autofac;
 using Microsoft.Bot.Builder.Dialogs.Internals;
 using Microsoft.Bot.Connector;
 using Microsoft.Bot.Builder.Dialogs;
+using Bot.Builder.ChannelConnector.Facebook;
 
 namespace BotBuilderChannelConnector.Demo.AspNet
 {
@@ -17,7 +18,7 @@ namespace BotBuilderChannelConnector.Demo.AspNet
             var settings = ConfigurationManager.AppSettings;
 
             app.UseFacebookMessenger(
-                config: new FacebookApiConfig
+                config: new FacebookConfig
                 {
                     Path = "/messages",                    
                     VerifyToken = settings["VerificationToken"]

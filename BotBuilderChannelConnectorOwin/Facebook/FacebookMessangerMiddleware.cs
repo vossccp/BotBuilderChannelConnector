@@ -9,28 +9,41 @@ using System.Threading.Tasks;
 using Bot.Builder.ChannelConnector.Facebook;
 using Bot.Builder.ChannelConnector.Facebook.Schema;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Bot.Builder.ChannelConnector.Owin.Facebook
 {
     public class FacebookMessangerMiddleware : OwinMiddleware
     {
-        readonly FacebookApiConfig config;
+        readonly FacebookConfig[] configs;
         readonly Func<IMessageActivity, Task> onActivityAsync;
-        readonly string path;
         readonly Dictionary<string, FacebookUserProfile> profileCache;
 
-        public FacebookMessangerMiddleware(OwinMiddleware next, FacebookApiConfig config, Func<IMessageActivity, Task> onActivityAsync)
+        public FacebookMessangerMiddleware(OwinMiddleware next, FacebookConfig[] configs, Func<IMessageActivity, Task> onActivityAsync)
             : base(next)
         {
-            path = config.Path ?? "/";
-            this.config = config;
+            if (configs == null && !configs.Any())
+            {
+                throw new ArgumentException("No configuration provided");
+            }
+            if (configs.Any(c => string.IsNullOrEmpty(c.Path)))
+            {
+                throw new ArgumentException("A valid path configuration has to be provided");
+            }
+            if (configs.Any(c => string.IsNullOrEmpty(c.VerifyToken)))
+            {
+                throw new ArgumentException($"A verification token has to be provided");
+            }
+
+            this.configs = configs;
             this.onActivityAsync = onActivityAsync;
             profileCache = new Dictionary<string, FacebookUserProfile>();
         }
 
         public override async Task Invoke(IOwinContext context)
         {
-            if (context.Request.Uri.LocalPath.Equals(path, StringComparison.InvariantCultureIgnoreCase))
+            var pathExists = configs.Any(c => context.Request.Uri.LocalPath.Equals(c.Path));
+            if (pathExists)
             {
                 if (context.Request.Query["hub.mode"] == "subscribe")
                 {
@@ -66,6 +79,11 @@ namespace Bot.Builder.ChannelConnector.Owin.Facebook
             }
         }
 
+        FacebookConfig GetConfig(string pageId)
+        {
+            return configs.Single(c => c.PageId == pageId);
+        }
+
         async Task MessageReceived(IOwinContext context)
         {
             var content = await new StreamReader(context.Request.Body).ReadToEndAsync();
@@ -82,7 +100,8 @@ namespace Bot.Builder.ChannelConnector.Owin.Facebook
 
         async Task TryAddUserProfileAsync(IMessageActivity activity)
         {
-            if (string.IsNullOrEmpty(config.PageAccessToken))
+            var config = GetConfig(activity.Recipient.Id);
+            if (config != null && string.IsNullOrEmpty(config.PageAccessToken))
             {
                 return;
             }
@@ -116,7 +135,7 @@ namespace Bot.Builder.ChannelConnector.Owin.Facebook
             Trace.TraceInformation("Received subscribtion request");
 
             var verifyToken = context.Request.Query["hub.verify_token"];
-            if (Equals(config.VerifyToken, verifyToken))
+            if (configs.Any(c => Equals(c.VerifyToken, verifyToken)))
             {
                 await context.Response.WriteAsync(context.Request.Query["hub.challenge"]);
                 context.Response.StatusCode = (int)HttpStatusCode.OK;

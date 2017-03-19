@@ -19,7 +19,7 @@ namespace Bot.Builder.ChannelConnector.Demo
             var settings = ConfigurationManager.AppSettings;
 
             appBuilder.UseFacebookMessenger(
-                config: new FacebookApiConfig
+                config: new FacebookConfig
                 {
                     Path = "/messages",
                     PageId = settings["PageId"],
