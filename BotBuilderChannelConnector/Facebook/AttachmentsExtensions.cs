@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Bot.Builder.ChannelConnector.Facebook.Schema;
+using System.Net.Mime;
 
 namespace Bot.Builder.ChannelConnector.Facebook
 {
@@ -69,7 +70,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
                     }
                 };
             }
-
+            
             return null;
             //if (attachment.ContentType.StartsWith("application", StringComparison.InvariantCultureIgnoreCase))
             //{

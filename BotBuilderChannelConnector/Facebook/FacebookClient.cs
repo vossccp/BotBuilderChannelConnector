@@ -1,23 +1,19 @@
-﻿using Microsoft.Bot.Connector;
+﻿using Bot.Builder.ChannelConnector.Facebook.Schema;
+using Microsoft.Bot.Connector;
 using Microsoft.Rest;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Net.Http;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Bot.Builder.ConnectorEx;
-using Newtonsoft.Json.Linq;
-using Bot.Builder.ChannelConnector.Facebook.Schema;
-using System.Diagnostics;
 
 namespace Bot.Builder.ChannelConnector.Facebook
 {
     public class FacebookClient
     {
         const string Url = "https://graph.facebook.com/v2.6/me/messages?access_token=";
+        const string GraphUrl = "https://graph.facebook.com/v2.8";
 
         readonly string pageAccessToken;
 
@@ -29,7 +25,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
 
         public FacebookClient(string pageAccessToken)
         {
-            if(string.IsNullOrEmpty(pageAccessToken))
+            if (string.IsNullOrEmpty(pageAccessToken))
             {
                 throw new ArgumentNullException(nameof(pageAccessToken));
             }
@@ -51,6 +47,28 @@ namespace Bot.Builder.ChannelConnector.Facebook
                 }
             }
             return result;
+        }
+
+        public async Task<FacebookUserProfile> GetUserProfileAsync(string userId)
+        {
+            using (var client = new HttpClient())
+            {
+                var escapedUserId = Uri.EscapeUriString(userId);
+                //See: https://developers.facebook.com/docs/messenger-platform/user-profile
+                var url = $"{GraphUrl}/{escapedUserId}?fields=first_name,last_name,locale,timezone,gender&access_token={pageAccessToken}";
+
+                var reponse = await client.GetAsync(url);
+
+                if (reponse.IsSuccessStatusCode)
+                {
+                    var response = await reponse.Content.ReadAsStringAsync();
+                    var profile = JsonConvert.DeserializeObject<FacebookUserProfile>(response);
+                    profile.Id = profile.Id ?? userId;
+                    return profile;
+                }
+
+                return null;
+            }
         }
 
         public async Task<HttpOperationResponse<object>> SendAsync(FacebookOutboundMessaging messaging)

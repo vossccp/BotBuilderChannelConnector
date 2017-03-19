@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Bot.Builder.ChannelConnector.Facebook.Schema;
+using System.Net.Mime;
 
 namespace Bot.Builder.ChannelConnector.Facebook
 {
@@ -109,6 +110,12 @@ namespace Bot.Builder.ChannelConnector.Facebook
                 if (link != null)
                 {
                     links.Add(link);
+                    continue;
+                }
+
+                if (attachment.ContentType == MediaTypeNames.Text.Plain)
+                {
+                    // ignore extra text
                     continue;
                 }
                 throw new NotSupportedException($"{attachment.ContentType} is not supported");
