@@ -30,27 +30,9 @@ namespace Bot.Builder.ChannelConnector.Facebook
                 }
                 else
                 {
-                    if (!string.IsNullOrEmpty(activity.Text))
+                    foreach(var msg in CreateFromAttachments(activity))
                     {
-                        yield return new FacebookOutboundMessaging
-                        {
-                            Recipient = new FacebookAccount
-                            {
-                                Id = activity.Recipient.Id
-                            },
-                            Message = new FacebookOutboundMessage
-                            {
-                                Text = activity.Text
-                            }
-                        };
-                    }
-
-                    if (activity.Attachments != null)
-                    {
-                        foreach (var msg in FromAttachments(activity.Recipient.Id, activity.Text, activity.Attachments))
-                        {
-                            yield return msg;
-                        }
+                        yield return msg;
                     }
                 }
             }
@@ -85,6 +67,38 @@ namespace Bot.Builder.ChannelConnector.Facebook
                 default:
                     // TODO: we might want to supprt JSON as string
                     throw new NotSupportedException($"{channelData.GetType()} not supported");
+            }
+        }
+
+        static IEnumerable<FacebookOutboundMessaging> CreateFromAttachments(this Activity activity)
+        {
+            var shouldSkipActivityText = activity.Attachments != null && activity.Attachments.Any() && 
+                activity.Attachments.All(attachment => attachment.ContentType == ThumbnailCard.ContentType);
+
+            if(!shouldSkipActivityText)
+            {
+                if (!String.IsNullOrWhiteSpace(activity.Text))
+                {
+                    yield return new FacebookOutboundMessaging
+                    {
+                        Recipient = new FacebookAccount
+                        {
+                            Id = activity.Recipient.Id
+                        },
+                        Message = new FacebookOutboundMessage
+                        {
+                            Text = activity.Text
+                        }
+                    };
+                }
+            }
+
+            if (activity.Attachments != null && activity.Attachments.Any())
+            {
+                foreach(var msg in FromAttachments(activity.Recipient.Id, activity.Text, activity.Attachments))
+                {
+                    yield return msg;
+                }
             }
         }
 
