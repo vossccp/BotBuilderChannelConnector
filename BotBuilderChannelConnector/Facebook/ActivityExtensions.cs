@@ -47,7 +47,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
 
                     if (activity.Attachments != null)
                     {
-                        foreach (var msg in FromAttachments(activity.Recipient.Id, activity.Attachments))
+                        foreach (var msg in FromAttachments(activity.Recipient.Id, activity.Text, activity.Attachments))
                         {
                             yield return msg;
                         }
@@ -88,7 +88,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
             }
         }
 
-        static IEnumerable<FacebookOutboundMessaging> FromAttachments(string recipientId, IList<Attachment> attachments)
+        static IEnumerable<FacebookOutboundMessaging> FromAttachments(string recipientId, string text, IList<Attachment> attachments)
         {
             if (!attachments.Any())
             {
@@ -99,7 +99,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
             var links = new List<FacebookAttachment>();
             foreach (var attachment in attachments)
             {
-                var element = attachment.ToFacebookElement();
+                var element = attachment.ToFacebookElement(text);
                 if (element != null)
                 {
                     elements.Add(element);
