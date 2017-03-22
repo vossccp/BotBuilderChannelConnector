@@ -25,10 +25,7 @@ namespace Bot.Builder.ChannelConnector.Owin.Facebook
         public static IAppBuilder UseFacebookMessenger(this IAppBuilder appBuilder, FacebookConfig[] configs, Func<IMessageActivity, Task> onActivityAsync)
         {
             FacebookMessenger.Configure(configs);
-
-            appBuilder.Use<FacebookMessangerMiddleware>(configs, onActivityAsync);
-
-            return appBuilder;
+            return appBuilder.Use<FacebookMessangerMiddleware>(configs, onActivityAsync);
         }
     }
 }
