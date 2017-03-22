@@ -5,6 +5,7 @@ source https://www.nuget.org/api/v2/
 nuget Autofac
 nuget Owin
 nuget Microsoft.Owin.SelfHost
+nuget Microsoft.Owin.Cors
 nuget Microsoft.Owin.Host.SystemWeb
 nuget Microsoft.Bot.Builder
 

@@ -41,8 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DirectLine\DirectlineConfig.cs" />
+    <Compile Include="DirectLine\DirectlineConversation.cs" />
     <Compile Include="DirectLine\DirectlineMiddleware.cs" />
     <Compile Include="DirectLine\DirectLineMiddlewareConfig.cs" />
+    <Compile Include="DirectLine\GuidExtensions.cs" />
     <Compile Include="Facebook\FacebookMessangerMiddleware.cs" />
     <Compile Include="Facebook\FacebookMiddlewareConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,3 +1,4 @@
 Owin
 Microsoft.Owin.SelfHost
+Microsoft.Owin.Cors
 Microsoft.Bot.Builder

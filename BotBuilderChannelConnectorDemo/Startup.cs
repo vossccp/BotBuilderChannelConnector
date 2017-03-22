@@ -19,11 +19,13 @@ namespace Bot.Builder.ChannelConnector.Demo
 
             var settings = ConfigurationManager.AppSettings;
 
+            appBuilder.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
+
             appBuilder.UseDirectline(
                 config: new DirectlineConfig
                 {
                     Path = "/directline",
-                    ApiKey = "122"
+                    ApiKey = "97IvKio_Vdk.cwA.1hs.GiH9JCCBjWDfVZOyzBnkcYT7yH-Aa_g843YBfCN_tBM"
                 },
                 onActivityAsync: (activity) =>
                 {
