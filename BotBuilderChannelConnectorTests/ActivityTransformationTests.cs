@@ -187,5 +187,56 @@ namespace BotBuilderChannelConectorTests
             Assert.Null(fbMessage.Message.Text);
             Assert.Equal("postback", template.Buttons[1].Type);
         }
+
+        [Fact]
+        public void CanConvertThumbnailCard()
+        {
+            var activity = new Activity
+            {
+                Text = "Deco!",
+                Recipient = new ChannelAccount
+                {
+                    Id = "4711"
+                },
+                Attachments = new List<Attachment>
+                {
+                    new ThumbnailCard
+                    {
+                        Subtitle = "Subtitle",
+                        Images = new List<CardImage>
+                        {
+                            new CardImage(url: "https://upload.wikimedia.org/wikipedia/commons/5/5c/Chelsea_Deco.jpg")
+                        },
+                        Buttons = new List<CardAction>
+                        {
+                            new CardAction
+                            {
+                                Value = "https://de.wikipedia.org/wiki/Deco",
+                                Type = ActionTypes.OpenUrl,
+                                Title = "Get me to Deco"
+                            },
+                            new CardAction
+                            {
+                                Value = "Postback",
+                                Type = ActionTypes.PostBack,
+                                Title = "Get me to Deco"
+                            }
+
+                        }
+                    }
+                    .ToAttachment()
+                }
+            };
+
+            var fbMessages = activity.ToFacebookMessaging().ToList();
+            var fbMessage = fbMessages.First();
+            var template = fbMessage.Message.Attachment.Payload.Elements.First();
+
+            Assert.Equal(1, fbMessages.Count);
+            Assert.Equal("4711", fbMessages.First().Recipient.Id);
+            Assert.Equal("Deco!", fbMessages.First().Message.Attachment.Payload.Elements.First().Title);
+            Assert.Null(fbMessage.Message.Text);
+            Assert.Equal("postback", template.Buttons[1].Type);
+        }
     }
 }

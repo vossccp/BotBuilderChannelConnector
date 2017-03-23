@@ -30,27 +30,9 @@ namespace Bot.Builder.ChannelConnector.Facebook
                 }
                 else
                 {
-                    if (!string.IsNullOrEmpty(activity.Text))
+                    foreach(var msg in CreateFromAttachments(activity))
                     {
-                        yield return new FacebookOutboundMessaging
-                        {
-                            Recipient = new FacebookAccount
-                            {
-                                Id = activity.Recipient.Id
-                            },
-                            Message = new FacebookOutboundMessage
-                            {
-                                Text = activity.Text
-                            }
-                        };
-                    }
-
-                    if (activity.Attachments != null)
-                    {
-                        foreach (var msg in FromAttachments(activity.Recipient.Id, activity.Attachments))
-                        {
-                            yield return msg;
-                        }
+                        yield return msg;
                     }
                 }
             }
@@ -88,7 +70,39 @@ namespace Bot.Builder.ChannelConnector.Facebook
             }
         }
 
-        static IEnumerable<FacebookOutboundMessaging> FromAttachments(string recipientId, IList<Attachment> attachments)
+        static IEnumerable<FacebookOutboundMessaging> CreateFromAttachments(this Activity activity)
+        {
+            var shouldSkipActivityText = activity.Attachments != null && activity.Attachments.Any() && 
+                activity.Attachments.All(attachment => attachment.ContentType == ThumbnailCard.ContentType);
+
+            if(!shouldSkipActivityText)
+            {
+                if (!String.IsNullOrWhiteSpace(activity.Text))
+                {
+                    yield return new FacebookOutboundMessaging
+                    {
+                        Recipient = new FacebookAccount
+                        {
+                            Id = activity.Recipient.Id
+                        },
+                        Message = new FacebookOutboundMessage
+                        {
+                            Text = activity.Text
+                        }
+                    };
+                }
+            }
+
+            if (activity.Attachments != null && activity.Attachments.Any())
+            {
+                foreach(var msg in FromAttachments(activity.Recipient.Id, activity.Text, activity.Attachments))
+                {
+                    yield return msg;
+                }
+            }
+        }
+
+        static IEnumerable<FacebookOutboundMessaging> FromAttachments(string recipientId, string text, IList<Attachment> attachments)
         {
             if (!attachments.Any())
             {
@@ -99,7 +113,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
             var links = new List<FacebookAttachment>();
             foreach (var attachment in attachments)
             {
-                var element = attachment.ToFacebookElement();
+                var element = attachment.ToFacebookElement(text);
                 if (element != null)
                 {
                     elements.Add(element);
