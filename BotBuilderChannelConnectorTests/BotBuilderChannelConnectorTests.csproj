@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActivityTransformationTests.cs" />
+    <Compile Include="DirectlineActivityIdTests.cs" />
     <Compile Include="FacebookMessageToActivityTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

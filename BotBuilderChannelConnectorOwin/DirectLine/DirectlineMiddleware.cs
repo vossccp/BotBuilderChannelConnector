@@ -1,4 +1,5 @@
-﻿using Microsoft.Bot.Connector;
+﻿using Bot.Builder.ChannelConnector.Directline;
+using Microsoft.Bot.Connector;
 using Microsoft.Owin;
 using Newtonsoft.Json;
 using System;
@@ -12,12 +13,12 @@ using System.Threading.Tasks;
 
 namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 {
-    public class DirectlineMiddleware : OwinMiddleware
+    public class DirectlineMiddleware : ChannelConnectorMiddleware
     {
         readonly DirectlineConfig[] configs;
 
         public DirectlineMiddleware(OwinMiddleware next, DirectlineConfig[] configs, Func<IMessageActivity, Task> onActivityAsync)
-            : base(next)
+            : base(next, onActivityAsync)
         {
             this.configs = configs;
         }
@@ -34,30 +35,19 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
                 }
                 if (!context.Request.Uri.LocalPath.StartsWith(config.Path))
                 {
-                    context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 }
 
                 if (context.Request.Uri.LocalPath.EndsWith("conversations"))
                 {
-                    HandleConversationsRequests(context);
+                    HandleConversationsRequests(config.ApiKey, context);
                 }
 
                 if (context.Request.Uri.LocalPath.EndsWith("activities"))
                 {
-                    HandleActivitiesRequests(context);
+                    await HandleActivitiesRequests(config.ApiKey, context);
                 }
             }
-
-
-            //if(context.Request. == "OPTIONS")
-            //{
-            //    string origin = context.Request.Headers.Get("Origin");
-
-            //    context.Response.Headers.Add("Access-Control-Allow-Origin", new string[] { "*" });
-            //    context.Response.Headers.Add("Access-Control-Allow-Credentials", new string[] { "true" });
-            //    context.Response.Headers.Add("Access-Control-Allow-Headers", new string[] { "authorization, x-requested-with" });
-            //    return;
-            //}
 
             await Next.Invoke(context);
         }
@@ -70,34 +60,59 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
                 if (segment.StartsWith("conversations") && i < uri.Segments.Length - 1)
                 {
-                    return uri.Segments[i + 1];
+                    return uri.Segments[i + 1].Substring(0, DirectlineChatLog.MaxLengthConversationId);
                 }
             }
             return null;
         }
 
-        private void HandleActivitiesRequests(IOwinContext context)
+        async Task HandleActivitiesRequests(string apiKey, IOwinContext context)
         {
             var conversationId = GetConversationId(context.Request.Uri);
             if (context.Request.Method == "GET")
             {
-                var result = new Activity[0];
+                // here we need to query the chat log
+                var result = new
+                {
+                    activities = new Activity[0]
+                };
 
-                context.Response.StatusCode = (int)HttpStatusCode.OK;
+                context.Response.StatusCode = (int)HttpStatusCode.Created;
                 context.Response.ContentType = "application/json";
                 context.Response.Write(JsonConvert.SerializeObject(result));
             }
+
+            if (context.Request.Method == "POST")
+            {
+                var content = await new StreamReader(context.Request.Body).ReadToEndAsync();
+                var activity = JsonConvert.DeserializeObject<Activity>(content);
+
+                var log = DirectlineChatLog.GetLog(apiKey, conversationId);
+                log.Add(activity);
+
+                var result = new
+                {
+                    id = activity.Id.ToString()
+                };
+
+                context.Response.StatusCode = (int)HttpStatusCode.OK;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(result));
+
+                await OnMessageReceived(activity);
+            }
         }
 
-        void HandleConversationsRequests(IOwinContext context)
+        void HandleConversationsRequests(string apiKey, IOwinContext context)
         {
             if (context.Request.Method == "POST")
             {
                 // create a new Conversation
 
+                var chat = DirectlineChatLog.NewConversation(apiKey);
                 var response = new DirectlineConversation
                 {
-                    Id = Guid.NewGuid().ToShortGuid(),
+                    Id = chat.ConversationId,
                     Token = "ABC",
                     ExpiresIn = 1800,
                     StreamUrl = "wss://directline.botframework.com/v3/directline/conversations/KzsR7O3ubDneY3xw1G4h0/stream?watermark=-&t=8GBHONEMRyM.dAA.SwB6AHMAUgA3AE8AMwB1AGIARABuAGUAWQAzAHgAdwAxAEcANABoADAA.GgQKx_mi0gE.UfaufUv7sfw.VPVbgGKtQFIb3ZGzjUgHN1ksIjy6WJlvq9ivh13pJLU"

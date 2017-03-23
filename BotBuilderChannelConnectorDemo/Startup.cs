@@ -29,8 +29,7 @@ namespace Bot.Builder.ChannelConnector.Demo
                 },
                 onActivityAsync: (activity) =>
                 {
-                    System.Console.WriteLine("Hello");
-                    return Task.CompletedTask;
+                    return Conversation.SendAsync(activity, () => new EchoDialog());
                 }
             );
 

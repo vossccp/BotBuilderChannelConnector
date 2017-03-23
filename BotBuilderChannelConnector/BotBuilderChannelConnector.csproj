@@ -45,6 +45,8 @@
     <Compile Include="DirectConnectorClient.cs" />
     <Compile Include="DirectConnectorClientFactory.cs" />
     <Compile Include="DirectConversation.cs" />
+    <Compile Include="Directline\DirectlineActivityId.cs" />
+    <Compile Include="Directline\DirectlineChatLog.cs" />
     <Compile Include="Facebook\ActivityExtensions.cs" />
     <Compile Include="Facebook\AttachmentsExtensions.cs" />
     <Compile Include="Facebook\FacebookClient.cs" />
@@ -72,9 +74,7 @@
     <None Include="paket.references" />
     <None Include="paket.template" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Directline\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
