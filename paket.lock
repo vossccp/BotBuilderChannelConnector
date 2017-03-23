@@ -39,7 +39,6 @@ NUGET
     Microsoft.Rest.ClientRuntime (2.3.5)
       Newtonsoft.Json (>= 6.0.8)
     Newtonsoft.Json (9.0.1)
-    NuGet.CommandLine (3.5)
     Owin (1.0)
     System.IdentityModel.Tokens.Jwt (4.0.4.403061554)
 
