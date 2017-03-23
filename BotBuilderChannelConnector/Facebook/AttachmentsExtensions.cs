@@ -1,16 +1,15 @@
-﻿using Microsoft.Bot.Builder.ConnectorEx;
-using Microsoft.Bot.Connector;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Bot.Builder.ConnectorEx;
+using Microsoft.Bot.Connector;
 using Bot.Builder.ChannelConnector.Facebook.Schema;
-using System.Net.Mime;
 
 namespace Bot.Builder.ChannelConnector.Facebook
 {
     public static class AttachmentsExtensions
     {
-        public static FacebookElement ToFacebookElement(this Attachment attachment)
+        public static FacebookElement ToFacebookElement(this Attachment attachment, string fallbackTitle)
         {
             switch (attachment.ContentType)
             {
@@ -20,11 +19,24 @@ namespace Bot.Builder.ChannelConnector.Facebook
 
                         return new FacebookElement
                         {
-                            Title = card.Title,
+                            Title = !String.IsNullOrWhiteSpace(card.Title) ? card.Title : fallbackTitle,
                             Subtitle = card.Subtitle,
                             ImageUrl = ToImageUrl(card.Images),
                             DefaultAction = ToDefaultAction(card.Tap),
                             Buttons = card.Buttons?.Select(ToFacebookButton).ToList()
+                        };
+                    }
+                case ThumbnailCard.ContentType:
+                    {
+                        var card = attachment.Content as ThumbnailCard;
+
+                        return new FacebookElement
+                        {
+                            Title = !String.IsNullOrWhiteSpace(card.Title) ? card.Title : fallbackTitle,
+                            Subtitle = card.Subtitle,
+                            ImageUrl = ToImageUrl(card.Images),
+                            DefaultAction = ToDefaultAction(card.Tap),
+                            Buttons = card.Buttons?.Select(ToFacebookButton).ToList(),
                         };
                     }
                 case KeyboardCard.ContentType:
