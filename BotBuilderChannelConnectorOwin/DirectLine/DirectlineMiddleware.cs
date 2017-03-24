@@ -84,7 +84,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
                     startIndex = int.Parse(watermark);
                 }
 
-                var activities = chat.Actvities.Skip(startIndex).ToList();
+                var activities = (await chat.GetActvitiesAsync()).Skip(startIndex).ToList();
                 var lastActivity = activities.LastOrDefault();
                 if (lastActivity != null)
                 {
@@ -112,7 +112,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
                 if (!chat.IsMember(activity.From))
                 {
-                    var memberAddedActivity = chat.AddMember(activity.From);
+                    var memberAddedActivity = await chat.AddMemberAsync(activity.From);
                     await OnMessageReceived(memberAddedActivity);
                 }
 

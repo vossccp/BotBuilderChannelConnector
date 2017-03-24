@@ -22,7 +22,7 @@ namespace Bot.Builder.ChannelConnector.Directline
 
         public async Task<HttpOperationResponse<object>> ReplyToActivityWithHttpMessagesAsync(string conversationId, string activityId, Activity activity, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await chat.SendAsync(activity);
+            await chat.SendActivityAsync(activity);
 
             return new HttpOperationResponse<object>
             {

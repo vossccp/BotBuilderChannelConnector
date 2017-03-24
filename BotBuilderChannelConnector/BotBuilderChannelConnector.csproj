@@ -61,6 +61,8 @@
     <Compile Include="Directline\DirectlineConfig.cs" />
     <Compile Include="Directline\DirectlineConnectorClient.cs" />
     <Compile Include="Directline\DirectlineConversation.cs" />
+    <Compile Include="Directline\IChatLog.cs" />
+    <Compile Include="Directline\InMemoryChatLog.cs" />
     <Compile Include="Facebook\FacebookConnectorClient.cs" />
     <Compile Include="Facebook\FacebookConversation.cs" />
     <Compile Include="Facebook\ActivityExtensions.cs" />
