@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using System.Collections.Generic;
+using Microsoft.Bot.Builder.ConnectorEx;
 
 namespace Bot.Builder.ChannelConnector.Demo
 {   
@@ -61,6 +62,29 @@ namespace Bot.Builder.ChannelConnector.Demo
                     heroCard.ToAttachment(),
                     heroCard.ToAttachment()
                 };
+
+                await context.PostAsync(reply);
+            }
+            else if ("location".Equals(message.Text) && message.ChannelId == "facebook")
+            {
+                var reply = context.MakeMessage();
+
+                reply.ChannelData = new FacebookMessage
+                (
+                    "Please submit your location",
+                    new List<FacebookQuickReply>
+                    {
+                        // If content_type is location, title and payload are not used
+                        // see https://developers.facebook.com/docs/messenger-platform/send-api-reference/quick-replies#fields
+                        // for more information.
+                        new FacebookQuickReply
+                        (
+                            FacebookQuickReply.ContentTypes.Location,
+                            default(string),
+                            default(string)
+                        )
+                    }
+                );
 
                 await context.PostAsync(reply);
             }
