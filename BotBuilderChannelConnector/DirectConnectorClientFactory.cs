@@ -29,11 +29,11 @@ namespace Bot.Builder.ChannelConnector
 
             if (channel == "directline")
             {
-                var chat = DirectlineChat.Get(activity.Recipient.Id, activity.Conversation.Id);
+                var chat = new DirectlineChat(activity.Conversation.Id);
                 return new DirectlineConnectorClient(chat);
             }
 
-            return null;
+            throw new NotSupportedException($"{activity.ChannelId} is not supported");
         }
 
         public IStateClient MakeStateClient()

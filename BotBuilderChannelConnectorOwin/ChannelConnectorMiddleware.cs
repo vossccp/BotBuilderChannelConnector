@@ -21,7 +21,7 @@ namespace Bot.Builder.ChannelConnector.Owin
 
         protected async Task OnMessageReceived(IMessageActivity activity)
         {
-            //Trace.TraceInformation("Recieved activity {0} for {1}", activity.Id, activity.Recipient.Id);
+            Trace.TraceInformation("Recieved activity {0} for {1}", activity.Id, activity.Recipient.Id);
             await onActivityAsync(activity);
         }
     }

@@ -11,7 +11,7 @@ namespace Bot.Builder.ChannelConnector.Directline
     {
         public const int MaxLengthConversationId = 22;
 
-        public static DirectlineChat NewConversation(DirectlineConfig config)
+        public static DirectlineChat NewConversation()
         {
             // http://web.archive.org/web/20100408172352/http://prettycode.org/2009/11/12/short-guid/
 
@@ -20,43 +20,24 @@ namespace Bot.Builder.ChannelConnector.Directline
                     .Replace("/", "_")
                     .Replace("+", "-");
 
-            return AddConversation(config, shortGuid);
-        }
-
-        public static DirectlineChat AddConversation(DirectlineConfig config, string conversationId)
-        {
-            var result = new DirectlineChat(config, conversationId);
-            chatLogs.TryAdd(conversationId, result);
-            return result;
-        }
-
-        static readonly ConcurrentDictionary<string, DirectlineChat> chatLogs
-            = new ConcurrentDictionary<string, DirectlineChat>();
-
-        public static DirectlineChat Get(string apiKey, string conversationId)
-        {
-            if (chatLogs.TryGetValue(conversationId, out DirectlineChat result))
-            {
-                return result;
-            }
-            return null;
+            return new DirectlineChat(shortGuid);
         }
 
         List<Activity> activities;
         readonly List<ChannelAccount> members;
-        readonly DirectlineConfig config;
         readonly IChatLog chatLog;
 
+        string name;
 
-        DirectlineChat(DirectlineConfig config, string converstaionId)
+        public DirectlineChat(string converstaionId)
         {
-            this.config = config;
             ConversationId = converstaionId;
             members = new List<ChannelAccount>();
             chatLog = new InMemoryChatLog();
+            name = ConversationId;
         }
 
-        async Task EnsureLoaded()
+        async Task EnsureLoadedAsync()
         {
             if (activities != null) return;
 
@@ -67,7 +48,10 @@ namespace Bot.Builder.ChannelConnector.Directline
             {
                 if (item.GetActivityType() == ActivityTypes.ConversationUpdate)
                 {
-                    members.AddRange(item.MembersAdded);
+                    foreach (var member in item.MembersAdded)
+                    {
+                        ApplyMember(member);
+                    }
                 }
                 else
                 {
@@ -76,20 +60,25 @@ namespace Bot.Builder.ChannelConnector.Directline
             }
         }
 
+        public void Refresh()
+        {
+            activities = null;
+        }
+
         public async Task<IEnumerable<Activity>> GetActvitiesAsync()
         {
-            await EnsureLoaded();
-            return activities.AsReadOnly();
+            await EnsureLoadedAsync();
+            return activities.Where(a => a.GetActivityType() == ActivityTypes.Message);
         }
 
         async Task MessageReceivedAsync(Activity activity)
         {
-            await EnsureLoaded();
+            await EnsureLoadedAsync();
 
             activity.Recipient = new ChannelAccount
             {
-                Id = BotName,
-                Name = BotName
+                Id = ConversationId,
+                Name = Name
             };
 
             activity.Conversation = new ConversationAccount
@@ -101,21 +90,30 @@ namespace Bot.Builder.ChannelConnector.Directline
             activities.Add(activity);
         }
 
-        public bool IsMember(ChannelAccount account)
+        void ApplyMember(ChannelAccount account)
         {
+            members.Add(account);
+
+            if (account.Id == ConversationId)
+            {
+                name = account.Name ?? ConversationId;
+            }
+        }
+
+        public async Task<bool> IsMemberAsync(ChannelAccount account)
+        {
+            await EnsureLoadedAsync();
             return members.Any(m => m.Id == account.Id);
         }
 
         public async Task<Activity> AddMemberAsync(ChannelAccount account)
         {
-            await EnsureLoaded();
-
-            if (IsMember(account))
+            if (await IsMemberAsync(account))
             {
                 throw new ArgumentException($"{account.Id} already is a member");
             }
 
-            members.Add(account);
+            ApplyMember(account);
 
             var result = new Activity
             {
@@ -123,7 +121,8 @@ namespace Bot.Builder.ChannelConnector.Directline
                 Type = ActivityTypes.ConversationUpdate,
                 From = new ChannelAccount
                 {
-                    Id = ConversationId
+                    Id = ConversationId,
+                    Name = Name
                 },
                 ChannelId = "directline",
                 Conversation = new ConversationAccount
@@ -132,8 +131,8 @@ namespace Bot.Builder.ChannelConnector.Directline
                 },
                 Recipient = new ChannelAccount
                 {
-                    Id = BotName,
-                    Name = BotName
+                    Id = ConversationId,
+                    Name = Name
                 },
                 ServiceUrl = string.Empty,
                 MembersAdded = new List<ChannelAccount>
@@ -147,7 +146,6 @@ namespace Bot.Builder.ChannelConnector.Directline
             };
 
             await chatLog.StoreAsync(result);
-
             return result;
         }
 
@@ -160,8 +158,8 @@ namespace Bot.Builder.ChannelConnector.Directline
         {
             activity.Recipient = new ChannelAccount
             {
-                Id = BotName,
-                Name = BotName
+                Id = ConversationId,
+                Name = Name
             };
 
             await AddAsync(activity);
@@ -174,7 +172,7 @@ namespace Bot.Builder.ChannelConnector.Directline
                 throw new ArgumentException("Activity has an Id assigned and is therefore assumed to belong to another chat");
             }
 
-            await EnsureLoaded();
+            await EnsureLoadedAsync();
 
             if (activity.Conversation == null || activity.Conversation.Id == null)
             {
@@ -197,7 +195,6 @@ namespace Bot.Builder.ChannelConnector.Directline
         }
 
         public string ConversationId { get; }
-        public string BotId => config.ApiKey;
-        public string BotName => config.BotName;
+        public string Name => name;
     }
 }

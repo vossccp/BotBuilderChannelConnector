@@ -15,7 +15,9 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
         public string Token { get; set; }
         [JsonProperty("expires_in")]
         public int ExpiresIn { get; set; }
-        [JsonProperty("streamUrl")]
-        public string StreamUrl { get; set; }
+
+        // In case, we want to support web sockets
+        //[JsonProperty("streamUrl")]
+        //public string StreamUrl { get; set; }
     }
 }

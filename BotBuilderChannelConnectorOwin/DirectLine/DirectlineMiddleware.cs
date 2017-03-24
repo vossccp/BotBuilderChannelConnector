@@ -17,6 +17,12 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
     {
         readonly DirectlineConfig[] configs;
 
+        static JsonSerializerSettings serializerSettings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+            Formatting = Formatting.Indented
+        };
+
         public DirectlineMiddleware(OwinMiddleware next, DirectlineConfig[] configs, Func<IMessageActivity, Task> onActivityAsync)
             : base(next, onActivityAsync)
         {
@@ -40,7 +46,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
                 if (context.Request.Uri.LocalPath.EndsWith("conversations"))
                 {
-                    await HandleConversationsRequests(config, context);
+                    HandleConversationsRequests(config, context);
                 }
 
                 if (context.Request.Uri.LocalPath.EndsWith("activities"))
@@ -71,13 +77,9 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
             var conversationId = GetConversationId(context.Request.Uri);
             if (context.Request.Method == "GET")
             {
-                var chat = DirectlineChat.Get(config.ApiKey, conversationId);
-                if (chat == null)
-                {
-                    chat = DirectlineChat.AddConversation(config, conversationId);
-                }
-
+                var chat = new DirectlineChat(conversationId);
                 var watermark = context.Request.Query["watermark"];
+
                 var startIndex = 0;
                 if (!string.IsNullOrEmpty(watermark))
                 {
@@ -91,33 +93,48 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
                     watermark = DirectlineActivityId.Parse(lastActivity.Id).Sequence.ToString();
                 }
 
-                // here we need to query the chat log
                 var result = new
                 {
                     activities = activities,
                     watermark = watermark
                 };
-
-                context.Response.StatusCode = (int)HttpStatusCode.Created;
+               
+                context.Response.StatusCode = (int)HttpStatusCode.OK;
                 context.Response.ContentType = "application/json";
-                context.Response.Write(JsonConvert.SerializeObject(result));
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(result, serializerSettings));
             }
-
             if (context.Request.Method == "POST")
             {
                 var content = await new StreamReader(context.Request.Body).ReadToEndAsync();
                 var activity = JsonConvert.DeserializeObject<Activity>(content);
 
-                var chat = DirectlineChat.Get(config.ApiKey, conversationId);
+                var chat = new DirectlineChat(conversationId);
+                var botAccount = new ChannelAccount
+                {
+                    Id = conversationId,
+                    Name = config.BotName
+                };
 
-                if (!chat.IsMember(activity.From))
+                if(!await chat.IsMemberAsync(botAccount))
+                {
+                    var memberAddedActivity = await chat.AddMemberAsync(botAccount);
+                    await OnMessageReceived(memberAddedActivity);
+
+                    // client might have changed (added messages) to the chat
+                    chat.Refresh();                    
+                }
+                if (!await chat.IsMemberAsync(activity.From))
                 {
                     var memberAddedActivity = await chat.AddMemberAsync(activity.From);
                     await OnMessageReceived(memberAddedActivity);
+
+                    // client might have changed (added messages) to the chat
+                    chat.Refresh();
                 }
 
+                // add received activity to the chat
                 await chat.ReceivedAsync(activity);
-
+                
                 var result = new
                 {
                     id = activity.Id.ToString()
@@ -125,30 +142,29 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
                 context.Response.StatusCode = (int)HttpStatusCode.OK;
                 context.Response.ContentType = "application/json";
-                await context.Response.WriteAsync(JsonConvert.SerializeObject(result));
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(result, serializerSettings));
 
                 await OnMessageReceived(activity);
             }
         }
 
-        async Task HandleConversationsRequests(DirectlineConfig config, IOwinContext context)
+        void HandleConversationsRequests(DirectlineConfig config, IOwinContext context)
         {
             if (context.Request.Method == "POST")
             {
                 // create a new Conversation
 
-                var chat = DirectlineChat.NewConversation(config);
+                var chat = DirectlineChat.NewConversation();
                 var response = new DirectlineConversation
                 {
                     Id = chat.ConversationId,
                     Token = "ABC",
-                    ExpiresIn = 1800,
-                    //StreamUrl = "wss://directline.botframework.com/v3/directline/conversations/KzsR7O3ubDneY3xw1G4h0/stream?watermark=-&t=8GBHONEMRyM.dAA.SwB6AHMAUgA3AE8AMwB1AGIARABuAGUAWQAzAHgAdwAxAEcANABoADAA.GgQKx_mi0gE.UfaufUv7sfw.VPVbgGKtQFIb3ZGzjUgHN1ksIjy6WJlvq9ivh13pJLU"
+                    ExpiresIn = 1800
                 };
 
                 context.Response.StatusCode = (int)HttpStatusCode.OK;
                 context.Response.ContentType = "application/json";
-                context.Response.Write(JsonConvert.SerializeObject(response));
+                context.Response.Write(JsonConvert.SerializeObject(response, serializerSettings));
 
                 return;
             }

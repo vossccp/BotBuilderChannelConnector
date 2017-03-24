@@ -56,7 +56,7 @@ namespace Bot.Builder.ChannelConnector.Demo
                                     await client.Conversations.ReplyToActivityAsync(reply);
                                 }
                             }
-                            break;
+                                break;
                         default:
                             await Conversation.SendAsync(activity, () => new EchoDialog());
                             break;

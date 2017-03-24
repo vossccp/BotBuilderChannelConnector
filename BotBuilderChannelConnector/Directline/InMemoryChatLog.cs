@@ -4,16 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Bot.Connector;
+using System.Collections.Concurrent;
 
 namespace Bot.Builder.ChannelConnector.Directline
 {
     public class InMemoryChatLog : IChatLog
     {
-        readonly Dictionary<string, List<Activity>> activityCache;
+        static readonly ConcurrentDictionary<string, List<Activity>> activityCache;
 
-        public InMemoryChatLog()
+        static InMemoryChatLog()
         {
-            activityCache = new Dictionary<string, List<Activity>>();
+            activityCache = new ConcurrentDictionary<string, List<Activity>>();
         }
 
         List<Activity> GetActivities(string conversationId)
@@ -22,6 +23,7 @@ namespace Bot.Builder.ChannelConnector.Directline
             if (!activityCache.TryGetValue(conversationId, out result))
             {
                 result = new List<Activity>();
+                activityCache.TryAdd(conversationId, result);
             }
             return result;
         }
