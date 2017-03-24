@@ -5,15 +5,14 @@ using System.Linq;
 using System.Web;
 using Microsoft.Rest;
 using Newtonsoft.Json;
-using Bot.Builder.ChannelConnector.Facebook;
 
-namespace Bot.Builder.ChannelConnector
+namespace Bot.Builder.ChannelConnector.Facebook
 {
-    public class DirectConnectorClient : IConnectorClient
+    public class FacebookConnectorClient : IConnectorClient
     {
-        public DirectConnectorClient(FacebookClient client)
+        public FacebookConnectorClient(FacebookClient client)
         {
-            Conversations = new DirectConversation(client);
+            Conversations = new FacebookConversation(client);
         }
 
         public Uri BaseUri

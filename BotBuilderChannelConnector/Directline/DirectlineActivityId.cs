@@ -24,8 +24,8 @@ namespace Bot.Builder.ChannelConnector.Directline
             return new DirectlineActivityId(elements[0], sequence);
         }
 
-        readonly string conversationId;
-        readonly int sequence;
+        public string ConversationId { get; }
+        public int Sequence { get; }
 
         public DirectlineActivityId(string conversationId, int sequence)
         {
@@ -34,13 +34,13 @@ namespace Bot.Builder.ChannelConnector.Directline
                 throw new ArgumentNullException(nameof(conversationId));
             }
 
-            this.conversationId = conversationId;
-            this.sequence = sequence;
+            ConversationId = conversationId;
+            Sequence = sequence;
         }
 
         public override string ToString()
         {
-            return string.Format("{0}|{1:D7}", conversationId, sequence);
+            return string.Format("{0}|{1:D7}", ConversationId, Sequence);
         }
 
         public override bool Equals(object obj)
@@ -51,14 +51,14 @@ namespace Bot.Builder.ChannelConnector.Directline
                 return false;
             }
 
-            return other.sequence == sequence && other.conversationId == conversationId;
+            return other.Sequence == Sequence && other.ConversationId == ConversationId;
         }
 
         public override int GetHashCode()
         {
             int hash = 13;
-            hash = (hash * 7) + conversationId.GetHashCode();
-            hash = (hash * 7) + sequence.GetHashCode();
+            hash = (hash * 7) + ConversationId.GetHashCode();
+            hash = (hash * 7) + Sequence.GetHashCode();
             return hash;
         }
     }

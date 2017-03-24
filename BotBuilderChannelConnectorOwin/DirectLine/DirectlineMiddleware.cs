@@ -40,12 +40,12 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
                 if (context.Request.Uri.LocalPath.EndsWith("conversations"))
                 {
-                    HandleConversationsRequests(config.ApiKey, context);
+                    HandleConversationsRequests(config, context);
                 }
 
                 if (context.Request.Uri.LocalPath.EndsWith("activities"))
                 {
-                    await HandleActivitiesRequests(config.ApiKey, context);
+                    await HandleActivitiesRequests(config, context);
                 }
             }
 
@@ -60,21 +60,42 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
                 if (segment.StartsWith("conversations") && i < uri.Segments.Length - 1)
                 {
-                    return uri.Segments[i + 1].Substring(0, DirectlineChatLog.MaxLengthConversationId);
+                    return uri.Segments[i + 1].Substring(0, DirectlineChat.MaxLengthConversationId);
                 }
             }
             return null;
         }
 
-        async Task HandleActivitiesRequests(string apiKey, IOwinContext context)
+        async Task HandleActivitiesRequests(DirectlineConfig config, IOwinContext context)
         {
             var conversationId = GetConversationId(context.Request.Uri);
             if (context.Request.Method == "GET")
             {
+                var chat = DirectlineChat.Get(config.ApiKey, conversationId);
+                if (chat == null)
+                {
+                    chat = DirectlineChat.AddConversation(config, conversationId);
+                }
+
+                var watermark = context.Request.Query["watermark"];
+                var startIndex = 0;
+                if (!string.IsNullOrEmpty(watermark))
+                {
+                    startIndex = int.Parse(watermark);
+                }
+
+                var activities = chat.Actvities.Skip(startIndex).ToList();
+                var lastActivity = activities.LastOrDefault();
+                if (lastActivity != null)
+                {
+                    watermark = DirectlineActivityId.Parse(lastActivity.Id).Sequence.ToString();
+                }
+
                 // here we need to query the chat log
                 var result = new
                 {
-                    activities = new Activity[0]
+                    activities = activities,
+                    watermark = watermark
                 };
 
                 context.Response.StatusCode = (int)HttpStatusCode.Created;
@@ -87,7 +108,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
                 var content = await new StreamReader(context.Request.Body).ReadToEndAsync();
                 var activity = JsonConvert.DeserializeObject<Activity>(content);
 
-                var log = DirectlineChatLog.GetLog(apiKey, conversationId);
+                var log = DirectlineChat.Get(config.ApiKey, conversationId);
                 log.Add(activity);
 
                 var result = new
@@ -103,19 +124,19 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
             }
         }
 
-        void HandleConversationsRequests(string apiKey, IOwinContext context)
+        void HandleConversationsRequests(DirectlineConfig config, IOwinContext context)
         {
             if (context.Request.Method == "POST")
             {
                 // create a new Conversation
 
-                var chat = DirectlineChatLog.NewConversation(apiKey);
+                var chat = DirectlineChat.NewConversation(config);
                 var response = new DirectlineConversation
                 {
                     Id = chat.ConversationId,
                     Token = "ABC",
                     ExpiresIn = 1800,
-                    StreamUrl = "wss://directline.botframework.com/v3/directline/conversations/KzsR7O3ubDneY3xw1G4h0/stream?watermark=-&t=8GBHONEMRyM.dAA.SwB6AHMAUgA3AE8AMwB1AGIARABuAGUAWQAzAHgAdwAxAEcANABoADAA.GgQKx_mi0gE.UfaufUv7sfw.VPVbgGKtQFIb3ZGzjUgHN1ksIjy6WJlvq9ivh13pJLU"
+                    //StreamUrl = "wss://directline.botframework.com/v3/directline/conversations/KzsR7O3ubDneY3xw1G4h0/stream?watermark=-&t=8GBHONEMRyM.dAA.SwB6AHMAUgA3AE8AMwB1AGIARABuAGUAWQAzAHgAdwAxAEcANABoADAA.GgQKx_mi0gE.UfaufUv7sfw.VPVbgGKtQFIb3ZGzjUgHN1ksIjy6WJlvq9ivh13pJLU"
                 };
 
                 context.Response.StatusCode = (int)HttpStatusCode.OK;

@@ -5,21 +5,35 @@ using System.Linq;
 using System.Web;
 using Microsoft.Bot.Connector;
 using Bot.Builder.ChannelConnector.Facebook;
+using Bot.Builder.ChannelConnector.Directline;
 
 namespace Bot.Builder.ChannelConnector
 {
     public class DirectConnectorClientFactory : IConnectorClientFactory
     {
-        readonly FacebookConfig config;
+        readonly IMessageActivity activity;
 
-        public DirectConnectorClientFactory(FacebookConfig config)
+        public DirectConnectorClientFactory(IMessageActivity activity)
         {
-            this.config = config;
+            this.activity = activity;
         }
 
         public IConnectorClient MakeConnectorClient()
         {
-            return new DirectConnectorClient(new FacebookClient(config.PageAccessToken));
+            var channel = activity.ChannelId;
+            if (channel == "facebook")
+            {
+                var fbConfig = FacebookMessenger.GetConfig(activity.Recipient.Id);
+                return new FacebookConnectorClient(new FacebookClient(fbConfig.PageAccessToken));
+            }
+
+            if (channel == "directline")
+            {
+                var chat = DirectlineChat.Get(activity.Recipient.Id, activity.Conversation.Id);
+                return new DirectlineConnectorClient(chat);
+            }
+
+            return null;
         }
 
         public IStateClient MakeStateClient()

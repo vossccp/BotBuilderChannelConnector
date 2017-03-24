@@ -12,27 +12,26 @@ namespace Bot.Builder.ChannelConnector.Facebook
 {
     public static class FacebookMessenger
     {
+        public static FacebookConfig[] configs;
+
+        public static FacebookConfig GetConfig(string pageId)
+        {
+            if (configs == null)
+            {
+                throw new BotConnectorException("Facebook channels are not configured");
+            }
+            return configs.SingleOrDefault(c => c.PageId == pageId);
+        }
+
         public static void Configure(FacebookConfig[] configs)
         {
             var builder = new ContainerBuilder();
-
-            builder.Register(c => configs)
-                .SingleInstance();
 
             builder
                 .Register(c =>
                 {
                     var activity = c.Resolve<IMessageActivity>();
-                    var fbConfigs = c.Resolve<FacebookConfig[]>();
-                    var fbConfig = fbConfigs.SingleOrDefault(cfg => cfg.PageId == activity.Recipient.Id);
-
-                    if (fbConfig == null)
-                    {
-                        string msg = $"No Facebook Configuration for PageId {activity.Recipient.Id}";
-                        throw new BotConnectorException(msg);
-                    }
-
-                    return new DirectConnectorClientFactory(fbConfig);
+                    return new DirectConnectorClientFactory(activity);
                 })
                 .As<IConnectorClientFactory>()
                 .InstancePerLifetimeScope();

@@ -8,6 +8,7 @@ using Microsoft.Bot.Builder.Dialogs.Internals;
 using Microsoft.Bot.Connector;
 using Bot.Builder.ChannelConnector.Owin.Facebook;
 using Bot.Builder.ChannelConnector.Owin.DirectLine;
+using Bot.Builder.ChannelConnector.Directline;
 
 namespace Bot.Builder.ChannelConnector.Demo
 {
@@ -25,6 +26,7 @@ namespace Bot.Builder.ChannelConnector.Demo
                 config: new DirectlineConfig
                 {
                     Path = "/directline",
+                    BotName = "Testbot",
                     ApiKey = "97IvKio_Vdk.cwA.1hs.GiH9JCCBjWDfVZOyzBnkcYT7yH-Aa_g843YBfCN_tBM"
                 },
                 onActivityAsync: (activity) =>
