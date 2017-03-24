@@ -9,6 +9,8 @@ using Microsoft.Bot.Connector;
 using Bot.Builder.ChannelConnector.Owin.Facebook;
 using Bot.Builder.ChannelConnector.Owin.DirectLine;
 using Bot.Builder.ChannelConnector.Directline;
+using System;
+using System.Linq;
 
 namespace Bot.Builder.ChannelConnector.Demo
 {
@@ -29,9 +31,37 @@ namespace Bot.Builder.ChannelConnector.Demo
                     BotName = "Testbot",
                     ApiKey = "97IvKio_Vdk.cwA.1hs.GiH9JCCBjWDfVZOyzBnkcYT7yH-Aa_g843YBfCN_tBM"
                 },
-                onActivityAsync: (activity) =>
+                onActivityAsync: async (activity) =>
                 {
-                    return Conversation.SendAsync(activity, () => new EchoDialog());
+                    var a = activity as Activity;
+                    switch(a.GetActivityType())
+                    {
+                        case ActivityTypes.ConversationUpdate:
+                            var factory = new DirectConnectorClientFactory(activity);
+                            var client = factory.MakeConnectorClient();
+
+                            IConversationUpdateActivity update = a;
+                            if (update.MembersAdded.Any())
+                            {
+                                var reply = a.CreateReply();
+                                var newMembers = update.MembersAdded?.Where(t => t.Id != activity.Recipient.Id);
+                                foreach (var newMember in newMembers)
+                                {
+                                    reply.Text = "Welcome";
+                                    if (!string.IsNullOrEmpty(newMember.Name))
+                                    {
+                                        reply.Text += $" {newMember.Name}";
+                                    }
+                                    reply.Text += "!";
+                                    await client.Conversations.ReplyToActivityAsync(reply);
+                                }
+                            }
+                            break;
+                        default:
+                            await Conversation.SendAsync(activity, () => new EchoDialog());
+                            break;
+                    }
+                    
                 }
             );
 

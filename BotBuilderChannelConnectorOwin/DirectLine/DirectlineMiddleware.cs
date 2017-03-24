@@ -40,7 +40,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
                 if (context.Request.Uri.LocalPath.EndsWith("conversations"))
                 {
-                    HandleConversationsRequests(config, context);
+                    await HandleConversationsRequests(config, context);
                 }
 
                 if (context.Request.Uri.LocalPath.EndsWith("activities"))
@@ -108,8 +108,15 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
                 var content = await new StreamReader(context.Request.Body).ReadToEndAsync();
                 var activity = JsonConvert.DeserializeObject<Activity>(content);
 
-                var log = DirectlineChat.Get(config.ApiKey, conversationId);
-                log.Add(activity);
+                var chat = DirectlineChat.Get(config.ApiKey, conversationId);
+
+                if (!chat.IsMember(activity.From))
+                {
+                    var memberAddedActivity = chat.AddMember(activity.From);
+                    await OnMessageReceived(memberAddedActivity);
+                }
+
+                await chat.ReceivedAsync(activity);
 
                 var result = new
                 {
@@ -124,7 +131,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
             }
         }
 
-        void HandleConversationsRequests(DirectlineConfig config, IOwinContext context)
+        async Task HandleConversationsRequests(DirectlineConfig config, IOwinContext context)
         {
             if (context.Request.Method == "POST")
             {

@@ -56,9 +56,8 @@
     <Compile Include="BotConfig.cs" />
     <Compile Include="BotConnectorException.cs" />
     <Compile Include="DirectConnectorClientFactory.cs" />
-    <Compile Include="Directline\Directline.cs" />
     <Compile Include="Directline\DirectlineActivityId.cs" />
-    <Compile Include="Directline\DirectlineChatLog.cs" />
+    <Compile Include="Directline\DirectlineChat.cs" />
     <Compile Include="Directline\DirectlineConfig.cs" />
     <Compile Include="Directline\DirectlineConnectorClient.cs" />
     <Compile Include="Directline\DirectlineConversation.cs" />
