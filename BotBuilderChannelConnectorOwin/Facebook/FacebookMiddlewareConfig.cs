@@ -24,7 +24,7 @@ namespace Bot.Builder.ChannelConnector.Owin.Facebook
         // All bots can then be handled through one entry point defined in onActivityAsync
         public static IAppBuilder UseFacebookMessenger(this IAppBuilder appBuilder, FacebookConfig[] configs, Func<IMessageActivity, Task> onActivityAsync)
         {
-            FacebookMessenger.Configure(configs);
+            ChannelConnector.AddFacebookMessengerConfigs(configs);
             return appBuilder.Use<FacebookMessangerMiddleware>(configs, onActivityAsync);
         }
     }

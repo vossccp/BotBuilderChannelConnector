@@ -27,7 +27,6 @@ namespace Bot.Builder.ChannelConnector.Directline
                     .Replace("+", "-");
         }
 
-
         public DirectlineChat(string converstaionId, IChatLog log)
         {
             if (log == null)

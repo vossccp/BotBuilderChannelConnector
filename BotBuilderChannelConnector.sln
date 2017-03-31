@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{14F22CFB-B919-45C5-8774-FD61894F98ED}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,8 +18,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotBuilderChannelConnectorTests", "BotBuilderChannelConnectorTests\BotBuilderChannelConnectorTests.csproj", "{1078CEEF-3E82-4A27-9337-553D8597D546}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotBuilderChannelConnectorOwin", "BotBuilderChannelConnectorOwin\BotBuilderChannelConnectorOwin.csproj", "{8305C07A-9070-42D7-BB1F-89DCDC640EE7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotBuilderChannelConnectorDemoAspNet", "BotBuilderChannelConnectorDemoAspNet\BotBuilderChannelConnectorDemoAspNet.csproj", "{ADFE2C81-6C3F-4D1E-8407-53D5EFE20E53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +41,6 @@ Global
 		{8305C07A-9070-42D7-BB1F-89DCDC640EE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8305C07A-9070-42D7-BB1F-89DCDC640EE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8305C07A-9070-42D7-BB1F-89DCDC640EE7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ADFE2C81-6C3F-4D1E-8407-53D5EFE20E53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADFE2C81-6C3F-4D1E-8407-53D5EFE20E53}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ADFE2C81-6C3F-4D1E-8407-53D5EFE20E53}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ADFE2C81-6C3F-4D1E-8407-53D5EFE20E53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
