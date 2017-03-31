@@ -40,7 +40,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
                     context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return;
                 }
-                if (!context.Request.Uri.LocalPath.StartsWith(config.Path))
+                if (!context.Request.Uri.LocalPath.StartsWith("directline"))
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 }

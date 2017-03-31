@@ -8,7 +8,6 @@ namespace Bot.Builder.ChannelConnector.Directline
 {
     public class DirectlineConfig
     {        
-        public string Path { get; set; }       
         public string BotName { get; set; }
         public string ApiKey { get; set; }
         public IChatLog ChatLog { get; set; }

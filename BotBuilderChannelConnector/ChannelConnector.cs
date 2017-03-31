@@ -39,7 +39,7 @@ namespace Bot.Builder.ChannelConnector
             builder.Update(Conversation.Container);
         }
 
-        public static void AddFacebookMessengerConfigs(FacebookConfig[] configs)
+        public static void AddFacebookMessengerConfig(FacebookConfig[] configs)
         {
             var builder = new ContainerBuilder();
 

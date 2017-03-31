@@ -27,7 +27,6 @@ namespace Bot.Builder.ChannelConnector.Demo
             appBuilder.UseDirectline(
                 config: new DirectlineConfig
                 {
-                    Path = "/directline",
                     BotName = "Testbot",
                     ApiKey = "97IvKio_Vdk.cwA.1hs.GiH9JCCBjWDfVZOyzBnkcYT7yH-Aa_g843YBfCN_tBM",
                     ChatLog = new InMemoryChatLog()
@@ -61,8 +60,7 @@ namespace Bot.Builder.ChannelConnector.Demo
                         default:
                             await Conversation.SendAsync(activity, () => new EchoDialog());
                             break;
-                    }
-                    
+                    }                    
                 }
             );
 
