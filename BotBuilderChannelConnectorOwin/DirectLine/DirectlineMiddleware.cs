@@ -4,6 +4,7 @@ using Microsoft.Owin;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -54,8 +55,10 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
                     await HandleActivitiesRequests(config, context);
                 }
             }
-
-            await Next.Invoke(context);
+            else
+            {
+                await Next.Invoke(context);
+            }            
         }
 
         static string GetConversationId(Uri uri)

@@ -26,9 +26,16 @@ namespace Bot.Builder.ChannelConnector.Owin
             {
                 await onActivityAsync(activity);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                Trace.TraceError(ex.Message);
+                Trace.WriteLine(exception.Message);
+                Trace.WriteLine(exception.StackTrace);
+
+                if (exception.InnerException != null)
+                {
+                    Trace.WriteLine(exception.InnerException.Message);
+                }
+
                 throw;
             }
         }

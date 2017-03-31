@@ -13,14 +13,14 @@ using System.Linq;
 
 namespace Bot.Builder.ChannelConnector.Owin.Facebook
 {
-    public class FacebookMessangerMiddleware : OwinMiddleware
+    public class FacebookMessangerMiddleware : ChannelConnectorMiddleware
     {
         readonly FacebookConfig[] configs;
         readonly Func<IMessageActivity, Task> onActivityAsync;
         readonly Dictionary<string, FacebookUserProfile> profileCache;
 
         public FacebookMessangerMiddleware(OwinMiddleware next, FacebookConfig[] configs, Func<IMessageActivity, Task> onActivityAsync)
-            : base(next)
+            : base(next, onActivityAsync)
         {
             if (configs == null && !configs.Any())
             {
@@ -53,24 +53,10 @@ namespace Bot.Builder.ChannelConnector.Owin.Facebook
 
                 if (context.Request.Method == "POST")
                 {
-                    try
-                    {
-                        await MessageReceived(context);
-                        return;
-                    }
-                    catch (Exception exception)
-                    {
-                        Trace.WriteLine(exception.Message);
-                        Trace.WriteLine(exception.StackTrace);
-
-                        if (exception.InnerException != null)
-                        {
-                            Trace.WriteLine(exception.InnerException.Message);
-                        }
-
-                        throw;
-                    }
+                    await MessageReceived(context);
+                    return;
                 }
+
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             }
             else
@@ -94,7 +80,7 @@ namespace Bot.Builder.ChannelConnector.Owin.Facebook
             {
                 Trace.TraceInformation("Recieved activity {0} for {1}", activity.Id, activity.Recipient.Id);
                 await TryAddUserProfileAsync(activity);
-                await onActivityAsync(activity);
+                await OnMessageReceived(activity);
             }
         }
 
