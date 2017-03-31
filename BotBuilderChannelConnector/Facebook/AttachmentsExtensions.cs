@@ -19,7 +19,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
 
                         return new FacebookElement
                         {
-                            Title = !String.IsNullOrWhiteSpace(card.Title) ? card.Title : fallbackTitle,
+                            Title = card.GetTitle(fallbackTitle),
                             Subtitle = card.Subtitle,
                             ImageUrl = ToImageUrl(card.Images),
                             DefaultAction = ToDefaultAction(card.Tap),
@@ -32,7 +32,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
 
                         return new FacebookElement
                         {
-                            Title = !String.IsNullOrWhiteSpace(card.Title) ? card.Title : fallbackTitle,
+                            Title = card.GetTitle(fallbackTitle),
                             Subtitle = card.Subtitle,
                             ImageUrl = ToImageUrl(card.Images),
                             DefaultAction = ToDefaultAction(card.Tap),
@@ -148,6 +148,34 @@ namespace Bot.Builder.ChannelConnector.Facebook
                 default:
                     throw new NotSupportedException($"{cardAction.Type} not supported");
             }
+        }
+
+        static string GetTitle(this ThumbnailCard card, string fallbackTitle)
+        {
+            if (!String.IsNullOrWhiteSpace(card?.Title))
+            {
+                return card.Title;
+            }
+            if (!String.IsNullOrWhiteSpace(card?.Text))
+            {
+                return card.Text;
+            }
+
+            return fallbackTitle;
+        }
+
+        static string GetTitle(this HeroCard card, string fallbackTitle)
+        {
+            if (!String.IsNullOrWhiteSpace(card?.Title))
+            {
+                return card.Title;
+            }
+            if (!String.IsNullOrWhiteSpace(card?.Text))
+            {
+                return card.Text;
+            }
+
+            return fallbackTitle;
         }
     }
 }
