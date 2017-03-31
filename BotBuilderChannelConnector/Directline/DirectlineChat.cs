@@ -11,30 +11,39 @@ namespace Bot.Builder.ChannelConnector.Directline
     {
         public const int MaxLengthConversationId = 22;
 
-        public static DirectlineChat NewConversation()
-        {
-            // http://web.archive.org/web/20100408172352/http://prettycode.org/2009/11/12/short-guid/
-
-            var shortGuid = Convert.ToBase64String(Guid.NewGuid().ToByteArray())
-                    .Substring(0, 22)
-                    .Replace("/", "_")
-                    .Replace("+", "-");
-
-            return new DirectlineChat(shortGuid);
-        }
-
         List<Activity> activities;
         readonly List<ChannelAccount> members;
         readonly IChatLog chatLog;
 
         string name;
 
-        public DirectlineChat(string converstaionId)
+        static string NewConversationId()
         {
+            // http://web.archive.org/web/20100408172352/http://prettycode.org/2009/11/12/short-guid/
+
+            return Convert.ToBase64String(Guid.NewGuid().ToByteArray())
+                    .Substring(0, 22)
+                    .Replace("/", "_")
+                    .Replace("+", "-");
+        }
+
+
+        public DirectlineChat(string converstaionId, IChatLog log)
+        {
+            if (log == null)
+            {
+                throw new ArgumentNullException(nameof(log));
+            }
+
             ConversationId = converstaionId;
             members = new List<ChannelAccount>();
-            chatLog = new InMemoryChatLog();
+            chatLog = log;
             name = ConversationId;
+        }
+
+        public DirectlineChat(IChatLog log)
+             : this(NewConversationId(), log)
+        {            
         }
 
         async Task EnsureLoadedAsync()

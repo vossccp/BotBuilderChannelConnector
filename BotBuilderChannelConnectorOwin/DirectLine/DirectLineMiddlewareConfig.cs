@@ -24,10 +24,15 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
             var builder = new ContainerBuilder();
 
             builder
+                .Register(c => new InMemoryChatLog())
+                .As<IChatLog>()
+                .InstancePerLifetimeScope();
+
+            builder
                 .Register(c =>
                 {
                     var activity = c.Resolve<IMessageActivity>();
-                    return new DirectConnectorClientFactory(activity);
+                    return new DirectlineConnectorClientFactory(activity.Conversation.Id, c.Resolve<IChatLog>());
                 })
                 .As<IConnectorClientFactory>()
                 .InstancePerLifetimeScope();

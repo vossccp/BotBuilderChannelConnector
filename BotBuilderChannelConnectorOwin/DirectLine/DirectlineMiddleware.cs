@@ -77,7 +77,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
             var conversationId = GetConversationId(context.Request.Uri);
             if (context.Request.Method == "GET")
             {
-                var chat = new DirectlineChat(conversationId);
+                var chat = new DirectlineChat(conversationId, config.ChatLog);
                 var watermark = context.Request.Query["watermark"];
 
                 var startIndex = 0;
@@ -108,7 +108,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
                 var content = await new StreamReader(context.Request.Body).ReadToEndAsync();
                 var activity = JsonConvert.DeserializeObject<Activity>(content);
 
-                var chat = new DirectlineChat(conversationId);
+                var chat = new DirectlineChat(conversationId, config.ChatLog);
                 var botAccount = new ChannelAccount
                 {
                     Id = conversationId,
@@ -154,8 +154,9 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
             {
                 // create a new Conversation
 
-                var chat = DirectlineChat.NewConversation();
-                var response = new DirectlineConversation
+                var chat = new DirectlineChat(config.ChatLog);
+
+                var response = new DirectlineConversation()
                 {
                     Id = chat.ConversationId,
                     Token = "ABC",

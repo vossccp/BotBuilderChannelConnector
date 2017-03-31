@@ -55,11 +55,12 @@
   <ItemGroup>
     <Compile Include="BotConfig.cs" />
     <Compile Include="BotConnectorException.cs" />
-    <Compile Include="DirectConnectorClientFactory.cs" />
+    <Compile Include="Facebook\DirectConnectorClientFactory.cs" />
     <Compile Include="Directline\DirectlineActivityId.cs" />
     <Compile Include="Directline\DirectlineChat.cs" />
     <Compile Include="Directline\DirectlineConfig.cs" />
     <Compile Include="Directline\DirectlineConnectorClient.cs" />
+    <Compile Include="Directline\DirectlineConnectorClientFactory.cs" />
     <Compile Include="Directline\DirectlineConversation.cs" />
     <Compile Include="Directline\IChatLog.cs" />
     <Compile Include="Directline\InMemoryChatLog.cs" />

@@ -29,7 +29,8 @@ namespace Bot.Builder.ChannelConnector.Demo
                 {
                     Path = "/directline",
                     BotName = "Testbot",
-                    ApiKey = "97IvKio_Vdk.cwA.1hs.GiH9JCCBjWDfVZOyzBnkcYT7yH-Aa_g843YBfCN_tBM"
+                    ApiKey = "97IvKio_Vdk.cwA.1hs.GiH9JCCBjWDfVZOyzBnkcYT7yH-Aa_g843YBfCN_tBM",
+                    ChatLog = new InMemoryChatLog()
                 },
                 onActivityAsync: async (activity) =>
                 {
@@ -37,9 +38,9 @@ namespace Bot.Builder.ChannelConnector.Demo
                     switch(a.GetActivityType())
                     {
                         case ActivityTypes.ConversationUpdate:
-                            var factory = new DirectConnectorClientFactory(activity);
-                            var client = factory.MakeConnectorClient();
-
+                            var chat = new DirectlineChat(activity.Conversation.Id, new InMemoryChatLog());
+                            var client = new DirectlineConnectorClient(chat);
+                        
                             IConversationUpdateActivity update = a;
                             if (update.MembersAdded.Any())
                             {
@@ -65,21 +66,21 @@ namespace Bot.Builder.ChannelConnector.Demo
                 }
             );
 
-            //appBuilder.UseFacebookMessenger(
-            //    config: new FacebookConfig
-            //    {
-            //        Path = "/messages",
-            //        PageId = settings["PageId"],
-            //        AppId = settings["AppId"],
-            //        AppSecret = settings["AppSecret"],
-            //        VerifyToken = settings["VerificationToken"],
-            //        PageAccessToken = settings["PageAccessToken"]
-            //    },
-            //    onActivityAsync: (activity) =>
-            //    {
-            //        return Conversation.SendAsync(activity, () => new DemoDialog());
-            //    }
-            //);
+            appBuilder.UseFacebookMessenger(
+                config: new FacebookConfig
+                {
+                    Path = "/messages",
+                    PageId = settings["PageId"],
+                    AppId = settings["AppId"],
+                    AppSecret = settings["AppSecret"],
+                    VerifyToken = settings["VerificationToken"],
+                    PageAccessToken = settings["PageAccessToken"]
+                },
+                onActivityAsync: (activity) =>
+                {
+                    return Conversation.SendAsync(activity, () => new EchoDialog());
+                }
+            );
         }
 
         static void RegisterInMemoryBotStore()

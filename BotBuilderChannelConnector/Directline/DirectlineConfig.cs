@@ -11,5 +11,6 @@ namespace Bot.Builder.ChannelConnector.Directline
         public string Path { get; set; }       
         public string BotName { get; set; }
         public string ApiKey { get; set; }
+        public IChatLog ChatLog { get; set; }
     }
 }

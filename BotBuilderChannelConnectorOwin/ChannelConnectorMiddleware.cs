@@ -13,7 +13,7 @@ namespace Bot.Builder.ChannelConnector.Owin
     {
         readonly Func<IMessageActivity, Task> onActivityAsync;
 
-        protected ChannelConnectorMiddleware(OwinMiddleware next, Func<IMessageActivity, Task> onActivityAsync) 
+        protected ChannelConnectorMiddleware(OwinMiddleware next, Func<IMessageActivity, Task> onActivityAsync)
             : base(next)
         {
             this.onActivityAsync = onActivityAsync;
@@ -22,7 +22,15 @@ namespace Bot.Builder.ChannelConnector.Owin
         protected async Task OnMessageReceived(IMessageActivity activity)
         {
             Trace.TraceInformation("Recieved activity {0} for {1}", activity.Id, activity.Recipient.Id);
-            await onActivityAsync(activity);
+            try
+            {
+                await onActivityAsync(activity);
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError(ex.Message);
+                throw;
+            }
         }
     }
 }
