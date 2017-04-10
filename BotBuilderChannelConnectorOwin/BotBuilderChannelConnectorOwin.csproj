@@ -41,22 +41,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChannelConnectorMiddleware.cs" />
+    <Compile Include="DirectLine\DirectlineAuthorizeAttribute.cs" />
     <Compile Include="DirectLine\DirectlineConversation.cs" />
-    <Compile Include="DirectLine\DirectlineMiddleware.cs" />
+    <Compile Include="DirectLine\ConversationsController.cs" />
     <Compile Include="DirectLine\DirectLineMiddlewareConfig.cs" />
     <Compile Include="Facebook\FacebookMessangerMiddleware.cs" />
     <Compile Include="Facebook\FacebookMiddlewareConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="paket.references" />
+    <None Include="paket.template" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\BotBuilderChannelConnector\BotBuilderChannelConnector.csproj">
       <Project>{31610fb9-82f3-4d96-9c7b-eafecd5718f1}</Project>
       <Name>BotBuilderChannelConnector</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="paket.references" />
-    <None Include="paket.template" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Choose>
@@ -97,6 +98,17 @@
       <ItemGroup>
         <Reference Include="System.Web.Http">
           <HintPath>..\packages\Microsoft.AspNet.WebApi.Core\lib\net45\System.Web.Http.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
+      <ItemGroup>
+        <Reference Include="System.Web.Http.Owin">
+          <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin\lib\net45\System.Web.Http.Owin.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

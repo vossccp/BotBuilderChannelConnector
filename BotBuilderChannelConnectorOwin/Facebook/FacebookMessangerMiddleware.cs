@@ -16,7 +16,6 @@ namespace Bot.Builder.ChannelConnector.Owin.Facebook
     public class FacebookMessangerMiddleware : ChannelConnectorMiddleware
     {
         readonly FacebookConfig[] configs;
-        readonly Func<IMessageActivity, Task> onActivityAsync;
         readonly Dictionary<string, FacebookUserProfile> profileCache;
 
         public FacebookMessangerMiddleware(OwinMiddleware next, FacebookConfig[] configs, Func<IMessageActivity, Task> onActivityAsync)
@@ -36,7 +35,6 @@ namespace Bot.Builder.ChannelConnector.Owin.Facebook
             }
 
             this.configs = configs;
-            this.onActivityAsync = onActivityAsync;
             profileCache = new Dictionary<string, FacebookUserProfile>();
         }
 

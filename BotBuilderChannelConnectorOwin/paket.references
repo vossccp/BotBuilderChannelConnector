@@ -1,4 +1,5 @@
 Autofac
 Owin
+Microsoft.AspNet.WebApi.Owin
 Microsoft.Owin.Host.SystemWeb
 Microsoft.Bot.Builder

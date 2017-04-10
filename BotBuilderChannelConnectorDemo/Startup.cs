@@ -34,12 +34,12 @@ namespace Bot.Builder.ChannelConnector.Demo
                 onActivityAsync: async (activity) =>
                 {
                     var a = activity as Activity;
-                    switch(a.GetActivityType())
+                    switch (a.GetActivityType())
                     {
                         case ActivityTypes.ConversationUpdate:
                             var chat = new DirectlineChat(activity.Conversation.Id, new InMemoryChatLog());
                             var client = new DirectlineConnectorClient(chat);
-                        
+
                             IConversationUpdateActivity update = a;
                             if (update.MembersAdded.Any())
                             {
@@ -56,29 +56,29 @@ namespace Bot.Builder.ChannelConnector.Demo
                                     await client.Conversations.ReplyToActivityAsync(reply);
                                 }
                             }
-                                break;
+                            break;
                         default:
                             await Conversation.SendAsync(activity, () => new EchoDialog());
                             break;
-                    }                    
+                    }
                 }
             );
 
-            appBuilder.UseFacebookMessenger(
-                config: new FacebookConfig
-                {
-                    Path = "/messages",
-                    PageId = settings["PageId"],
-                    AppId = settings["AppId"],
-                    AppSecret = settings["AppSecret"],
-                    VerifyToken = settings["VerificationToken"],
-                    PageAccessToken = settings["PageAccessToken"]
-                },
-                onActivityAsync: (activity) =>
-                {
-                    return Conversation.SendAsync(activity, () => new EchoDialog());
-                }
-            );
+            //appBuilder.UseFacebookMessenger(
+            //    config: new FacebookConfig
+            //    {
+            //        Path = "/messages",
+            //        PageId = settings["PageId"],
+            //        AppId = settings["AppId"],
+            //        AppSecret = settings["AppSecret"],
+            //        VerifyToken = settings["VerificationToken"],
+            //        PageAccessToken = settings["PageAccessToken"]
+            //    },
+            //    onActivityAsync: (activity) =>
+            //    {
+            //        return Conversation.SendAsync(activity, () => new EchoDialog());
+            //    }
+            //);
         }
 
         static void RegisterInMemoryBotStore()
