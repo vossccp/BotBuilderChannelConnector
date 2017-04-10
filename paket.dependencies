@@ -4,6 +4,7 @@ source https://www.nuget.org/api/v2/
 
 nuget Autofac
 nuget Owin
+nuget Autofac.WebApi2.Owin
 nuget Microsoft.AspNet.WebApi.Owin
 nuget Microsoft.Owin.SelfHost
 nuget Microsoft.Owin.Cors

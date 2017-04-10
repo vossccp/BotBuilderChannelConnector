@@ -64,21 +64,21 @@ namespace Bot.Builder.ChannelConnector.Demo
                 }
             );
 
-            //appBuilder.UseFacebookMessenger(
-            //    config: new FacebookConfig
-            //    {
-            //        Path = "/messages",
-            //        PageId = settings["PageId"],
-            //        AppId = settings["AppId"],
-            //        AppSecret = settings["AppSecret"],
-            //        VerifyToken = settings["VerificationToken"],
-            //        PageAccessToken = settings["PageAccessToken"]
-            //    },
-            //    onActivityAsync: (activity) =>
-            //    {
-            //        return Conversation.SendAsync(activity, () => new EchoDialog());
-            //    }
-            //);
+            appBuilder.UseFacebookMessenger(
+                config: new FacebookConfig
+                {
+                    Path = "/messages",
+                    PageId = settings["PageId"],
+                    AppId = settings["AppId"],
+                    AppSecret = settings["AppSecret"],
+                    VerifyToken = settings["VerificationToken"],
+                    PageAccessToken = settings["PageAccessToken"]
+                },
+                onActivityAsync: (activity) =>
+                {
+                    return Conversation.SendAsync(activity, () => new EchoDialog());
+                }
+            );
         }
 
         static void RegisterInMemoryBotStore()

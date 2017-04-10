@@ -10,11 +10,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Autofac.Integration.WebApi;
 using Newtonsoft.Json.Serialization;
 
 namespace Bot.Builder.ChannelConnector.Owin.DirectLine
-{    
-    public static class DirectLineMiddlewareConfig
+{
+    public static class DirectLineOwinConfig
     {
         public static IAppBuilder UseDirectline(this IAppBuilder appBuilder, DirectlineConfig config, Func<IMessageActivity, Task> onActivityAsync)
         {
@@ -26,22 +27,39 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
             ChannelConnector.AddDirectlineConfig(configs);
 
             var httpConfig = new HttpConfiguration();
-            foreach (var directlineConfig in configs)
-            {
-                httpConfig.Properties.TryAdd(directlineConfig.ApiKey, directlineConfig);
-            }
 
-            httpConfig.Properties.TryAdd("callback", onActivityAsync);
+            var builder = new ContainerBuilder();
+
+            builder.RegisterType<DirectlineConversationsController>().InstancePerRequest();
+            builder.RegisterInstance(configs.ToDictionary(c => c.ApiKey, c => c)).SingleInstance();
+            builder.RegisterInstance(onActivityAsync);
+
+            builder
+                .Register(c => new DirectlineAuthorizationFilter(c.Resolve<Dictionary<string, DirectlineConfig>>()))
+                .AsWebApiAuthorizationFilterFor<DirectlineConversationsController>()
+                .InstancePerRequest();
+
+            builder.RegisterWebApiFilterProvider(httpConfig);
+
+            var container = builder.Build();
+            httpConfig.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+
             var formatter = httpConfig.Formatters.JsonFormatter;
             formatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
             httpConfig.Routes.MapHttpRoute
             (
                 name: "directline",
-                routeTemplate: "directline/{controller}/{id}/{action}",
-                defaults: new { id = RouteParameter.Optional, action = RouteParameter.Optional }
+                routeTemplate: "directline/conversations/{id}/{action}",
+                defaults: new
+                {
+                    controller = "DirectlineConversations",
+                    id = RouteParameter.Optional,
+                    action = RouteParameter.Optional
+                }
             );
 
+            appBuilder.UseAutofacWebApi(httpConfig);
             return appBuilder.UseWebApi(httpConfig);
         }
     }

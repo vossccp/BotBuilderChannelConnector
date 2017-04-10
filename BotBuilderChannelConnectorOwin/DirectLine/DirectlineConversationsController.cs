@@ -6,16 +6,25 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Autofac.Integration.WebApi;
 using Bot.Builder.ChannelConnector.Directline;
 using Microsoft.Bot.Connector;
 
 namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 {
-    [DirectlineAuthorize]
-    public class ConversationsController : ApiController
+    public class DirectlineConversationsController : ApiController
     {
         public DirectlineConfig DirectlineConfig
-            => Configuration.Properties[User.Identity.Name] as DirectlineConfig;
+            => configs[User.Identity.Name];
+
+        readonly Dictionary<string, DirectlineConfig> configs;
+        readonly Func<IMessageActivity, Task> onActivityAsync;
+
+        public DirectlineConversationsController(Dictionary<string, DirectlineConfig> configs, Func<IMessageActivity, Task> onActivityAsync)
+        {
+            this.configs = configs;
+            this.onActivityAsync = onActivityAsync;
+        }
 
         public DirectlineConversation Post()
         {
@@ -61,7 +70,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
             if (!await chat.IsMemberAsync(botAccount))
             {
                 var memberAddedActivity = await chat.AddMemberAsync(botAccount);
-                await OnMessageReceived(memberAddedActivity);
+                await ChannelConnectorOwin.OnMessageReceived(memberAddedActivity, onActivityAsync);
 
                 // client might have changed (added messages) to the chat
                 chat.Refresh();
@@ -69,7 +78,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
             if (!await chat.IsMemberAsync(activity.From))
             {
                 var memberAddedActivity = await chat.AddMemberAsync(activity.From);
-                await OnMessageReceived(memberAddedActivity);
+                await ChannelConnectorOwin.OnMessageReceived(memberAddedActivity, onActivityAsync);
 
                 // client might have changed (added messages) to the chat
                 chat.Refresh();
@@ -77,35 +86,12 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
             // add received activity to the chat
             await chat.ReceivedAsync(activity);
-            await OnMessageReceived(activity);
+            await ChannelConnectorOwin.OnMessageReceived(activity, onActivityAsync);
 
             return new
             {
                 activity.Id
             };
-        }
-
-        protected async Task OnMessageReceived(IMessageActivity activity)
-        {
-            var onActivityAsync = Configuration.Properties["callback"] as Func<IMessageActivity, Task>;
-
-            Trace.TraceInformation("Recieved activity {0} for {1}", activity.Id, activity.Recipient.Id);
-            try
-            {
-                await onActivityAsync(activity);
-            }
-            catch (Exception exception)
-            {
-                Trace.WriteLine(exception.Message);
-                Trace.WriteLine(exception.StackTrace);
-
-                if (exception.InnerException != null)
-                {
-                    Trace.WriteLine(exception.InnerException.Message);
-                }
-
-                throw;
-            }
         }
     }
 }

@@ -40,13 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChannelConnectorMiddleware.cs" />
-    <Compile Include="DirectLine\DirectlineAuthorizeAttribute.cs" />
+    <Compile Include="ChannelConnectorOwin.cs" />
+    <Compile Include="DirectLine\DirectlineAuthorizationFilter.cs" />
     <Compile Include="DirectLine\DirectlineConversation.cs" />
-    <Compile Include="DirectLine\ConversationsController.cs" />
-    <Compile Include="DirectLine\DirectLineMiddlewareConfig.cs" />
-    <Compile Include="Facebook\FacebookMessangerMiddleware.cs" />
-    <Compile Include="Facebook\FacebookMiddlewareConfig.cs" />
+    <Compile Include="DirectLine\DirectlineConversationsController.cs" />
+    <Compile Include="DirectLine\DirectLineOwinConfig.cs" />
+    <Compile Include="Facebook\FacebookMessengerController.cs" />
+    <Compile Include="Facebook\FacebookOwinConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +65,39 @@
       <ItemGroup>
         <Reference Include="Autofac">
           <HintPath>..\packages\Autofac\lib\net45\Autofac.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
+      <ItemGroup>
+        <Reference Include="Autofac.Integration.Owin">
+          <HintPath>..\packages\Autofac.Owin\lib\net45\Autofac.Integration.Owin.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
+      <ItemGroup>
+        <Reference Include="Autofac.Integration.WebApi">
+          <HintPath>..\packages\Autofac.WebApi2\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
+      <ItemGroup>
+        <Reference Include="Autofac.Integration.WebApi.Owin">
+          <HintPath>..\packages\Autofac.WebApi2.Owin\lib\net45\Autofac.Integration.WebApi.Owin.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

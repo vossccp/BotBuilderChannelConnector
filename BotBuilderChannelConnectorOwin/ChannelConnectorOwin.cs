@@ -1,25 +1,16 @@
-﻿using Microsoft.Bot.Connector;
-using Microsoft.Owin;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Bot.Connector;
 
 namespace Bot.Builder.ChannelConnector.Owin
 {
-    public abstract class ChannelConnectorMiddleware : OwinMiddleware
+    public static class ChannelConnectorOwin
     {
-        readonly Func<IMessageActivity, Task> onActivityAsync;
-
-        protected ChannelConnectorMiddleware(OwinMiddleware next, Func<IMessageActivity, Task> onActivityAsync)
-            : base(next)
-        {
-            this.onActivityAsync = onActivityAsync;
-        }
-
-        protected async Task OnMessageReceived(IMessageActivity activity)
+        public static async Task OnMessageReceived(IMessageActivity activity, Func<IMessageActivity, Task> onActivityAsync)
         {
             Trace.TraceInformation("Recieved activity {0} for {1}", activity.Id, activity.Recipient.Id);
             try
