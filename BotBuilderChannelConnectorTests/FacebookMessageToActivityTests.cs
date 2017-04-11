@@ -60,6 +60,14 @@ namespace Bot.Builder.ChannelConnector.Tests
             Assert.Equal("Hello", activity.Text);
         }
 
+        public void CanConververPostackPayload()
+        {
+            //var fbMessage = new FacebookInboundMessage
+            //{
+
+            //}
+        }
+
         [Fact]
         public void CanConvertLocation()
         {

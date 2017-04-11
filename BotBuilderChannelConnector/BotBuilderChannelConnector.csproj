@@ -50,6 +50,7 @@
     <Compile Include="Facebook\FacebookClient.cs" />
     <Compile Include="Facebook\FacebookConfig.cs" />
     <Compile Include="Facebook\FacebookMessenger.cs" />
+    <Compile Include="Facebook\Schema\FacebookPostback.cs" />
     <Compile Include="Facebook\Schema\FacebookUserProfile.cs" />
     <Compile Include="Facebook\Schema\FacebookAccount.cs" />
     <Compile Include="Facebook\Schema\FacebookAttachment.cs" />

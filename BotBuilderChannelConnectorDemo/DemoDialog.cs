@@ -72,11 +72,17 @@ namespace Bot.Builder.ChannelConnector.Demo
                     },
                     Buttons = new List<CardAction>
                     {
-                        new CardAction()
+                        new CardAction
                         {
                             Value = "https://de.wikipedia.org/wiki/Deco",
                             Type = "openUrl",
                             Title = "Get me to Deco"
+                        },
+                        new CardAction
+                        {
+                            Type = ActionTypes.PostBack,
+                            Title = "Make me a postback",
+                            Value = "Postback value"
                         }
                     }
                 };
