@@ -1,7 +1,8 @@
-redirects: strict
+redirects: off
 framework: net46
 source https://www.nuget.org/api/v2/
 
+nuget Newtonsoft.Json redirects: on
 nuget Autofac
 nuget Owin
 nuget Microsoft.Owin.SelfHost
@@ -9,7 +10,7 @@ nuget Microsoft.Owin.Host.SystemWeb
 nuget Microsoft.Bot.Builder
 
 group test
-	redirects: strict
+	redirects: off
 	framework: net46
 	source https://www.nuget.org/api/v2/
 

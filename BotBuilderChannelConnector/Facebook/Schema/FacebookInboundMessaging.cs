@@ -12,5 +12,7 @@ namespace Bot.Builder.ChannelConnector.Facebook.Schema
         public long? Timestamp { get; set; }
         [JsonProperty("message")]
         public FacebookInboundMessage Message { get; set; }
+        [JsonProperty("postback")]
+        public FacebookPostback Postback { get; set; }
     }
 }

@@ -40,6 +40,33 @@ namespace Bot.Builder.ChannelConnector.Tests
             };
         }
 
+        static FacebookRequestMessage CreatePostbackMessage(FacebookPostback postback)
+        {
+            return new FacebookRequestMessage
+            {
+                Entries = new[]
+                {
+                    new FacebookEntry
+                    {
+                        Messaging = new []
+                        {
+                            new FacebookInboundMessaging
+                            {
+                                Sender = new FacebookAccount
+                                {
+                                    Id = "1"
+                                },
+                                Recipient = new FacebookAccount
+                                {
+                                    Id = "2"
+                                },
+                                Postback = postback   
+                            }
+                        }
+                    }
+                }
+            };
+        }
 
         [Fact]
         public void CanConvertTextMessage()
@@ -60,12 +87,18 @@ namespace Bot.Builder.ChannelConnector.Tests
             Assert.Equal("Hello", activity.Text);
         }
 
+        [Fact]
         public void CanConververPostackPayload()
         {
-            //var fbMessage = new FacebookInboundMessage
-            //{
+            var fbMessage = new FacebookPostback
+            {
+                Payload = "Postback Value"
+            };
 
-            //}
+            var activities = CreatePostbackMessage(fbMessage).ToMessageActivities().ToList();
+
+            Assert.Equal(1, activities.Count);
+            Assert.Equal("Postback Value", activities[0].Text);
         }
 
         [Fact]
