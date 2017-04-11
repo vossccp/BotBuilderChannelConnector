@@ -7,6 +7,9 @@
   </appSettings>
 
   
+<<<<<<< HEAD
+</configuration>
+=======
 <runtime><assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
   <dependentAssembly>
     <Paket>True</Paket>
@@ -14,3 +17,4 @@
     <bindingRedirect oldVersion="0.0.0.0-65535.65535.65535.65535" newVersion="9.0.0.0" />
   </dependentAssembly>
 </assemblyBinding></runtime></configuration>
+>>>>>>> master

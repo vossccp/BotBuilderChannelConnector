@@ -58,7 +58,11 @@
     <Compile Include="Facebook\AttachmentsExtensions.cs" />
     <Compile Include="Facebook\FacebookClient.cs" />
     <Compile Include="Facebook\FacebookConfig.cs" />
+<<<<<<< HEAD
+=======
+    <Compile Include="Facebook\FacebookMessenger.cs" />
     <Compile Include="Facebook\Schema\FacebookPostback.cs" />
+>>>>>>> master
     <Compile Include="Facebook\Schema\FacebookUserProfile.cs" />
     <Compile Include="Facebook\Schema\FacebookAccount.cs" />
     <Compile Include="Facebook\Schema\FacebookAttachment.cs" />

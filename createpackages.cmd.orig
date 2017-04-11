@@ -13,6 +13,6 @@ rem .\.paket\paket.exe pack output nugets version %builder%
 <<<<<<< HEAD
 .\.paket\paket.exe pack output nugets version 4.0.0-alpha
 =======
-.\.paket\paket.exe pack output nugets version 3.5.5.7
+.\.paket\paket.exe pack output nugets version 3.5.5.8
 >>>>>>> master
 echo *** Finished building Bot.Builder.ChannelConnector
