@@ -10,5 +10,5 @@ msbuild /property:Configuration=release BotBuilderChannelConnector\BotBuilderCha
 msbuild /property:Configuration=release BotBuilderChannelConnectorOwin\BotBuilderChannelConnectorOwin.csproj 
 for /f %%v in ('powershell -noprofile "(Get-Command .\BotBuilderChannelConnector\bin\release\Microsoft.Bot.Builder.dll).FileVersionInfo.FileVersion"') do set builder=%%v
 rem .\.paket\paket.exe pack output nugets version %builder%
-.\.paket\paket.exe pack output nugets version 4.0.0-alpha
+.\.paket\paket.exe pack output nugets version 4.0.1-alpha
 echo *** Finished building Bot.Builder.ChannelConnector
