@@ -80,4 +80,4 @@ NUGET
     xunit.extensibility.execution (2.2)
       xunit.extensibility.core (2.2)
     xunit.runner.console (2.2)
-    xunit.runner.visualstudio (2.2)
+    xunit.runner.visualstudio (2.2.0) - version_in_path: true

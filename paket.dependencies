@@ -19,4 +19,4 @@ group test
 
 	nuget xunit
 	nuget xunit.runner.console
-	nuget xunit.runner.visualstudio
+	nuget xunit.runner.visualstudio version_in_path: true
