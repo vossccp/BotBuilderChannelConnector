@@ -30,12 +30,12 @@ namespace Bot.Builder.ChannelConnector.Owin.Facebook
             this.onActivityAsync = onActivityAsync;
         }
 
-        public string Get(
+        public int Get(
             [FromUri(Name = "hub.mode")] string hubMode,
             [FromUri(Name = "hub.challenge")] string hubChallenge,
             [FromUri(Name = "hub.verify_token")] string hubVerifyToken)
         {
-            return hubChallenge;
+            return int.Parse(hubChallenge);
         }
 
         public async Task Post(FacebookRequestMessage message)
