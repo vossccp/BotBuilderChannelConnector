@@ -53,7 +53,8 @@ namespace Bot.Builder.ChannelConnector.Facebook
                     {
                         Id = m.Recipient.Id
                     },
-                    ChannelData = JsonConvert.SerializeObject(m),
+
+                    ChannelData = JsonConvert.SerializeObject(m, FacebookClient.SerializerSettings),
 
                     Text = GetMessageText(m),
 

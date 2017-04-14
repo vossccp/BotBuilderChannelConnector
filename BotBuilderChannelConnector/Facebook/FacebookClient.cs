@@ -16,9 +16,9 @@ namespace Bot.Builder.ChannelConnector.Facebook
         const string Url = "https://graph.facebook.com/v2.6/me/messages?access_token=";
         const string GraphUrl = "https://graph.facebook.com/v2.8";
 
-        readonly string pageAccessToken;        
+        readonly string pageAccessToken;
 
-        static JsonSerializerSettings serializerSettings = new JsonSerializerSettings
+        internal static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
             Formatting = Formatting.Indented
@@ -78,7 +78,7 @@ namespace Bot.Builder.ChannelConnector.Facebook
 
             using (var client = new HttpClient())
             {
-                var content = JsonConvert.SerializeObject(messaging, serializerSettings);
+                var content = JsonConvert.SerializeObject(messaging, SerializerSettings);
 
                 Trace.TraceInformation(content);
 
