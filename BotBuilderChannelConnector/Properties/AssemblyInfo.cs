@@ -31,6 +31,10 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.5.0.*")]
-[assembly: AssemblyFileVersion("0.5.0.0")]
+// As per this: https://codingforsmarties.wordpress.com/2016/01/21/how-to-version-assemblies-destined-for-nuget/
+// we leave the assembly version untouched (only updated on major releases) and
+// change the AsseblyFileVeriosn and the AssemblyFileInfomationVersion every
+// time we want to ship a new version to nuget
+[assembly: AssemblyVersion("4.0.0.0")]
+[assembly: AssemblyFileVersion("4.0.3.0")]
+[assembly: AssemblyInformationalVersion("4.0.3-alpha")]
