@@ -26,9 +26,22 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
             this.onActivityAsync = onActivityAsync;
         }
 
-        public DirectlineConversation Post()
+        public async Task<DirectlineConversation> Post()
         {
             var chat = new DirectlineChat(DirectlineConfig.ChatLog);
+
+            var botAccount = new ChannelAccount
+            {
+                Id = chat.ConversationId,
+                Name = DirectlineConfig.BotName
+            };
+
+            if (!await chat.IsMemberAsync(botAccount))
+            {
+                var memberAddedActivity = await chat.AddMemberAsync(botAccount);
+                await ChannelConnectorOwin.OnMessageReceived(memberAddedActivity, onActivityAsync);
+            }
+
             return new DirectlineConversation
             {
                 Id = chat.ConversationId,
@@ -67,14 +80,6 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
                 Name = DirectlineConfig.BotName
             };
 
-            if (!await chat.IsMemberAsync(botAccount))
-            {
-                var memberAddedActivity = await chat.AddMemberAsync(botAccount);
-                await ChannelConnectorOwin.OnMessageReceived(memberAddedActivity, onActivityAsync);
-
-                // client might have changed (added messages) to the chat
-                chat.Refresh();
-            }
             if (!await chat.IsMemberAsync(activity.From))
             {
                 var memberAddedActivity = await chat.AddMemberAsync(activity.From);

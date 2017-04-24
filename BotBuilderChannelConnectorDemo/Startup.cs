@@ -44,16 +44,26 @@ namespace Bot.Builder.ChannelConnector.Demo
                             if (update.MembersAdded.Any())
                             {
                                 var reply = a.CreateReply();
-                                var newMembers = update.MembersAdded?.Where(t => t.Id != activity.Recipient.Id);
-                                foreach (var newMember in newMembers)
+
+                                if (update.MembersAdded.Any(t => t.Id == activity.Recipient.Id))
                                 {
-                                    reply.Text = "Welcome";
-                                    if (!string.IsNullOrEmpty(newMember.Name))
-                                    {
-                                        reply.Text += $" {newMember.Name}";
-                                    }
-                                    reply.Text += "!";
+                                    // Channel member added
+                                    reply.Text = "Welcome to our chat";
                                     await client.Conversations.ReplyToActivityAsync(reply);
+                                }
+                                else
+                                {
+                                    var newMembers = update.MembersAdded.Where(t => t.Id != activity.Recipient.Id);
+                                    foreach (var newMember in newMembers)
+                                    {
+                                        reply.Text = "Welcome";
+                                        if (!string.IsNullOrEmpty(newMember.Name))
+                                        {
+                                            reply.Text += $" {newMember.Name}";
+                                        }
+                                        reply.Text += "!";
+                                        await client.Conversations.ReplyToActivityAsync(reply);
+                                    }
                                 }
                             }
                             break;
