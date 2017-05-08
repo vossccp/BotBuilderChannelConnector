@@ -41,8 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChannelConnectorOwin.cs" />
+    <Compile Include="DirectLine\ActivitesController.cs" />
     <Compile Include="DirectLine\DirectlineAuthorizationFilter.cs" />
     <Compile Include="DirectLine\DirectlineConversation.cs" />
+    <Compile Include="DirectLine\DirectlineActivitesController.cs" />
     <Compile Include="DirectLine\DirectlineConversationsController.cs" />
     <Compile Include="DirectLine\DirectLineOwinConfig.cs" />
     <Compile Include="Facebook\FacebookMessengerController.cs" />

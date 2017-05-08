@@ -31,6 +31,8 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
             var builder = new ContainerBuilder();
 
             builder.RegisterType<DirectlineConversationsController>().InstancePerRequest();
+            builder.RegisterType<DirectlineActivitesController>().InstancePerRequest();
+
             builder.RegisterInstance(configs.ToDictionary(c => c.ApiKey, c => c)).SingleInstance();
             builder.RegisterInstance(onActivityAsync);
 
@@ -39,7 +41,12 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
                 .AsWebApiAuthorizationFilterFor<DirectlineConversationsController>()
                 .InstancePerRequest();
 
-            builder.RegisterWebApiFilterProvider(httpConfig);
+	        builder
+		        .Register(c => new DirectlineAuthorizationFilter(c.Resolve<Dictionary<string, DirectlineConfig>>()))				
+		        .AsWebApiAuthorizationFilterFor<DirectlineActivitesController>()
+		        .InstancePerRequest();
+
+			builder.RegisterWebApiFilterProvider(httpConfig);
 
             var container = builder.Build();
             httpConfig.DependencyResolver = new AutofacWebApiDependencyResolver(container);
@@ -50,16 +57,26 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
             httpConfig.Routes.MapHttpRoute
             (
                 name: "directline",
-                routeTemplate: "directline/conversations/{id}/{action}",
+                routeTemplate: "directline/conversations/{id}",
                 defaults: new
                 {
                     controller = "DirectlineConversations",
-                    id = RouteParameter.Optional,
-                    action = RouteParameter.Optional
+                    id = RouteParameter.Optional
                 }
             );
 
-            appBuilder.UseAutofacWebApi(httpConfig);
+	        httpConfig.Routes.MapHttpRoute
+	        (
+		        name: "directline-activities",
+		        routeTemplate: "directline/conversations/{id}/activities",
+		        defaults: new
+		        {
+			        controller = "DirectlineActivites",
+			        id = RouteParameter.Optional
+		        }
+	        );
+
+			appBuilder.UseAutofacWebApi(httpConfig);
             return appBuilder.UseWebApi(httpConfig);
         }
     }

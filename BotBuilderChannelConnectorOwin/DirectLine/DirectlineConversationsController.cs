@@ -12,91 +12,65 @@ using Microsoft.Bot.Connector;
 
 namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 {
-    public class DirectlineConversationsController : ApiController
-    {
-        public DirectlineConfig DirectlineConfig
-            => configs[User.Identity.Name];
+	public class DirectlineConversationsController : ApiController
+	{
+		public DirectlineConfig DirectlineConfig
+			=> configs[User.Identity.Name];
 
-        readonly Dictionary<string, DirectlineConfig> configs;
-        readonly Func<IMessageActivity, Task> onActivityAsync;
+		readonly Dictionary<string, DirectlineConfig> configs;
+		readonly Func<IMessageActivity, Task> onActivityAsync;
 
-        public DirectlineConversationsController(Dictionary<string, DirectlineConfig> configs, Func<IMessageActivity, Task> onActivityAsync)
-        {
-            this.configs = configs;
-            this.onActivityAsync = onActivityAsync;
-        }
+		public DirectlineConversationsController(Dictionary<string, DirectlineConfig> configs, Func<IMessageActivity, Task> onActivityAsync)
+		{
+			this.configs = configs;
+			this.onActivityAsync = onActivityAsync;
+		}
 
-        public async Task<DirectlineConversation> Post()
-        {
-            var chat = new DirectlineChat(DirectlineConfig.ChatLog);
+		public async Task<DirectlineConversation> Post()
+		{
+			var chat = new DirectlineChat(DirectlineConfig.ChatLog);
 
-            var botAccount = new ChannelAccount
-            {
-                Id = chat.ConversationId,
-                Name = DirectlineConfig.BotName
-            };
+			await InitChatAsync(chat);
 
-            if (!await chat.IsMemberAsync(botAccount))
-            {
-                var memberAddedActivity = await chat.AddMemberAsync(botAccount);
-                await ChannelConnectorOwin.OnMessageReceived(memberAddedActivity, onActivityAsync);
-            }
+			return new DirectlineConversation
+			{
+				Id = chat.ConversationId,
+				Token = "ABC",
+				ExpiresIn = 1800
+			};
+		}
 
-            return new DirectlineConversation
-            {
-                Id = chat.ConversationId,
-                Token = "ABC",
-                ExpiresIn = 1800
-            };
-        }
+		async Task InitChatAsync(DirectlineChat chat)
+		{
+			var botAccount = new ChannelAccount
+			{
+				Id = chat.ConversationId,
+				Name = DirectlineConfig.BotName
+			};
 
-        [HttpGet]
-        public async Task<dynamic> Activities(string id, int? watermark)
-        {
-            var skip = watermark.GetValueOrDefault(0);
-            var chat = new DirectlineChat(id, DirectlineConfig.ChatLog);
+			if (!await chat.IsMemberAsync(botAccount))
+			{
+				var memberAddedActivity = await chat.AddMemberAsync(botAccount);
+				await ChannelConnectorOwin.OnMessageReceived(memberAddedActivity, onActivityAsync);
+			}
+		}
 
-            var activities = (await chat.GetActvitiesAsync()).Skip(skip).ToList();
-            var lastActivity = activities.LastOrDefault();
-            if (lastActivity != null)
-            {
-                skip = DirectlineActivityId.Parse(lastActivity.Id).Sequence;
-            }
+		public async Task<DirectlineConversation> Get(string id, int? watermark)
+		{
+			var chat = new DirectlineChat(id, DirectlineConfig.ChatLog);
 
-            return new
-            {
-                Activities = activities,
-                Watermark = skip
-            };
-        }
+			var activities = await chat.GetActvitiesAsync();
+			if (!activities.Any())
+			{
+				await InitChatAsync(chat);
+			}
 
-        [HttpPost]
-        public async Task<dynamic> Activities(string id, Activity activity)
-        {
-            var chat = new DirectlineChat(id, DirectlineConfig.ChatLog);
-            var botAccount = new ChannelAccount
-            {
-                Id = id,
-                Name = DirectlineConfig.BotName
-            };
-
-            if (!await chat.IsMemberAsync(activity.From))
-            {
-                var memberAddedActivity = await chat.AddMemberAsync(activity.From);
-                await ChannelConnectorOwin.OnMessageReceived(memberAddedActivity, onActivityAsync);
-
-                // client might have changed (added messages) to the chat
-                chat.Refresh();
-            }
-
-            // add received activity to the chat
-            await chat.ReceivedAsync(activity);
-            await ChannelConnectorOwin.OnMessageReceived(activity, onActivityAsync);
-
-            return new
-            {
-                activity.Id
-            };
-        }
-    }
+			return new DirectlineConversation
+			{
+				Id = chat.ConversationId,
+				Token = "ABC",
+				ExpiresIn = 1800
+			};
+		}
+	}
 }

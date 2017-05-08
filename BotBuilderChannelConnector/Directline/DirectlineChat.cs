@@ -79,25 +79,6 @@ namespace Bot.Builder.ChannelConnector.Directline
             return activities.Where(a => a.GetActivityType() == ActivityTypes.Message);
         }
 
-        async Task MessageReceivedAsync(Activity activity)
-        {
-            await EnsureLoadedAsync();
-
-            activity.Recipient = new ChannelAccount
-            {
-                Id = ConversationId,
-                Name = Name
-            };
-
-            activity.Conversation = new ConversationAccount
-            {
-                Id = ConversationId
-            };
-
-            await chatLog.StoreAsync(activity);
-            activities.Add(activity);
-        }
-
         void ApplyMember(ChannelAccount account)
         {
             members.Add(account);
