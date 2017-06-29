@@ -29,11 +29,6 @@ namespace Bot.Builder.ChannelConnector
                 })
                 .As<DirectlineConfig>();
 
-            builder
-                .Register(c => c.Resolve<DirectlineConfig>().ChatLog)
-                .As<IChatLog>()
-                .InstancePerLifetimeScope();
-
             Configure(builder);
 
             builder.Update(Conversation.Container);
@@ -72,7 +67,8 @@ namespace Bot.Builder.ChannelConnector
                             var fbConfig = c.Resolve<FacebookConfig>();
                             return new FacebookConnectorClientFactory(fbConfig.PageAccessToken);
                         case "directline":
-                            return new DirectlineConnectorClientFactory(activity.Conversation.Id, c.Resolve<IChatLog>());
+	                        var directlineConfig = c.Resolve<DirectlineConfig>();
+                            return new DirectlineConnectorClientFactory(directlineConfig.BotName, activity.Conversation.Id, directlineConfig.ChatLog);
                         default:
                             throw new NotSupportedException($"{activity.ChannelId} is not supported");
                     }

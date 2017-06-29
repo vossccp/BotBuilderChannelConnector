@@ -40,7 +40,7 @@ namespace Bot.Builder.ChannelConnector.Directline
 
         public override string ToString()
         {
-            return string.Format("{0}|{1:D7}", ConversationId, Sequence);
+            return $"{ConversationId}|{Sequence:D7}";
         }
 
         public override bool Equals(object obj)

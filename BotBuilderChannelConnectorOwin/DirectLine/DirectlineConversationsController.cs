@@ -28,7 +28,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
 		public async Task<DirectlineConversation> Post()
 		{
-			var chat = new DirectlineChat(DirectlineConfig.ChatLog);
+			var chat = DirectlineChat.Create(DirectlineConfig.BotName, DirectlineConfig.ChatLog);
 
 			await InitChatAsync(chat);
 
@@ -42,11 +42,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
 		async Task InitChatAsync(DirectlineChat chat)
 		{
-			var botAccount = new ChannelAccount
-			{
-				Id = chat.ConversationId,
-				Name = DirectlineConfig.BotName
-			};
+			var botAccount = chat.Bot;
 
 			if (!await chat.IsMemberAsync(botAccount))
 			{
@@ -57,7 +53,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
 		public async Task<DirectlineConversation> Get(string id, int? watermark)
 		{
-			var chat = new DirectlineChat(id, DirectlineConfig.ChatLog);
+			var chat = new DirectlineChat(DirectlineConfig.BotName, id, DirectlineConfig.ChatLog);
 
 			var activities = await chat.GetActvitiesAsync();
 			if (!activities.Any())

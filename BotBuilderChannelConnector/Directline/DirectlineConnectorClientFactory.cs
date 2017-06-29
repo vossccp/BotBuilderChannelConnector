@@ -12,8 +12,9 @@ namespace Bot.Builder.ChannelConnector.Directline
     {
         readonly string conversationId;
         readonly IChatLog chatLog;
+	    readonly string botName;
 
-        public DirectlineConnectorClientFactory(string conversationId, IChatLog chatLog)
+        public DirectlineConnectorClientFactory(string botName, string conversationId, IChatLog chatLog)
         {
             this.chatLog = chatLog;
             this.conversationId = conversationId;
@@ -21,7 +22,7 @@ namespace Bot.Builder.ChannelConnector.Directline
 
         public IConnectorClient MakeConnectorClient()
         {
-            return new DirectlineConnectorClient(new DirectlineChat(conversationId, chatLog));
+            return new DirectlineConnectorClient(new DirectlineChat(botName, conversationId, chatLog));
         }
 
         public IStateClient MakeStateClient()
