@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using Autofac.Integration.WebApi;
 using Bot.Builder.ChannelConnector.Directline;
@@ -32,11 +35,18 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
 			await InitChatAsync(chat);
 
+			return CreateConversationResponse(chat);
+		}
+
+		static DirectlineConversation CreateConversationResponse(DirectlineChat chat)
+		{
+			var handler = DirectlineWebSocketHandler.Create(chat);
 			return new DirectlineConversation
 			{
 				Id = chat.ConversationId,
-				Token = "ABC",
-				ExpiresIn = 1800
+				Token = handler.Token,
+				ExpiresIn = (int) DirectlineWebSocketHandler.TokenExpirationTime.TotalSeconds,
+				StreamUrl = $"ws://localhost:9000/directline/conversations/{chat.ConversationId}/stream?t={HttpUtility.UrlEncode(handler.Token)}"
 			};
 		}
 
@@ -53,7 +63,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
 		public async Task<DirectlineConversation> Get(string id, int? watermark)
 		{
-			var chat = new DirectlineChat(DirectlineConfig.BotName, id, DirectlineConfig.ChatLog);
+			var chat = DirectlineChat.GetOrCreate(id, DirectlineConfig.BotName, DirectlineConfig.ChatLog);
 
 			var activities = await chat.GetActvitiesAsync();
 			if (!activities.Any())
@@ -61,12 +71,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 				await InitChatAsync(chat);
 			}
 
-			return new DirectlineConversation
-			{
-				Id = chat.ConversationId,
-				Token = "ABC",
-				ExpiresIn = 1800
-			};
+			return CreateConversationResponse(chat);
 		}
 	}
 }

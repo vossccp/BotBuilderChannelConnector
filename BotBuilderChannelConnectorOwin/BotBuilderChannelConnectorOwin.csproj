@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,6 +47,8 @@
     <Compile Include="DirectLine\DirectlineActivitesController.cs" />
     <Compile Include="DirectLine\DirectlineConversationsController.cs" />
     <Compile Include="DirectLine\DirectLineOwinConfig.cs" />
+    <Compile Include="DirectLine\DirectlineWebSocketHandler.cs" />
+    <Compile Include="DirectLine\DirectlineWebsocketServer.cs" />
     <Compile Include="Facebook\FacebookMessengerController.cs" />
     <Compile Include="Facebook\FacebookOwinConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -37,7 +37,7 @@ namespace Bot.Builder.ChannelConnector.Demo
                     switch (a.GetActivityType())
                     {
                         case ActivityTypes.ConversationUpdate:
-                            var chat = new DirectlineChat("Testbot", activity.Conversation.Id, new InMemoryChatLog());
+                            var chat = DirectlineChat.Get(activity.Conversation.Id);
                             var client = new DirectlineConnectorClient(chat);							
 
                             IConversationUpdateActivity update = a;

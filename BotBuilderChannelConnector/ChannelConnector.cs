@@ -68,7 +68,7 @@ namespace Bot.Builder.ChannelConnector
                             return new FacebookConnectorClientFactory(fbConfig.PageAccessToken);
                         case "directline":
 	                        var directlineConfig = c.Resolve<DirectlineConfig>();
-                            return new DirectlineConnectorClientFactory(directlineConfig.BotName, activity.Conversation.Id, directlineConfig.ChatLog);
+                            return new DirectlineConnectorClientFactory(activity.Conversation.Id);
                         default:
                             throw new NotSupportedException($"{activity.ChannelId} is not supported");
                     }

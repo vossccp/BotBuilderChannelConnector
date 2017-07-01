@@ -29,7 +29,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 		public async Task<dynamic> Get(string id, int? watermark)
         {
             var skip = watermark.GetValueOrDefault(0);
-            var chat = new DirectlineChat(DirectlineConfig.BotName, id, DirectlineConfig.ChatLog);
+	        var chat = DirectlineChat.Get(id);
 
             var activities = (await chat.GetActvitiesAsync()).Skip(skip).ToList();
 
@@ -39,10 +39,10 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
                 Watermark = activities.Count
             };
         }
-        
-        public async Task<dynamic> Post(string id, Activity activity)
-        {
-            var chat = new DirectlineChat(DirectlineConfig.BotName, id, DirectlineConfig.ChatLog);
+
+		public async Task<dynamic> Post(string id, Activity activity)
+		{
+			var chat = DirectlineChat.Get(id);
 
 			if (!await chat.IsMemberAsync(activity.From))
             {
@@ -57,7 +57,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
             await chat.ReceivedAsync(activity);
             await ChannelConnectorOwin.OnMessageReceived(activity, onActivityAsync);
 
-            return new
+			return new
             {
                 activity.Id
             };

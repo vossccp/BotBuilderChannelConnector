@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Autofac.Integration.WebApi;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace Bot.Builder.ChannelConnector.Owin.DirectLine
@@ -53,7 +54,8 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
             var formatter = httpConfig.Formatters.JsonFormatter;
             formatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-
+			formatter.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+	        
             httpConfig.Routes.MapHttpRoute
             (
                 name: "directline",
@@ -76,7 +78,9 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 		        }
 	        );
 
+			appBuilder.UseDirectlineWebSockets();
 			appBuilder.UseAutofacWebApi(httpConfig);
+
             return appBuilder.UseWebApi(httpConfig);
         }
     }
