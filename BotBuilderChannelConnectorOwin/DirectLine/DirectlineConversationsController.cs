@@ -31,28 +31,38 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
 		public async Task<DirectlineConversation> Post()
 		{
-			var chat = DirectlineChat.Create(DirectlineConfig.BotName, DirectlineConfig.ChatLog);
+			var newConversationId = DirectlineChat.NewConversationId();
+
+			var chat = new DirectlineChat(newConversationId, DirectlineConfig.ChatLog);
 
 			await InitChatAsync(chat);
 
-			return CreateConversationResponse(chat);
+			return CreateConversationResponse(chat.ConversationId);
 		}
 
-		static DirectlineConversation CreateConversationResponse(DirectlineChat chat)
+		DirectlineConversation CreateConversationResponse(string conversationId)
 		{
-			var handler = DirectlineWebSocketHandler.Create(chat);
+			var uri = Request.RequestUri;
+			var handler = DirectlineWebSocketHandler.Create(conversationId, DirectlineConfig.ChatLog);
+
+			var wsUri = $"ws://{uri.Host}:{uri.Port}/directline/conversations/{conversationId}/stream?t={HttpUtility.UrlEncode(handler.Token)}";
+
 			return new DirectlineConversation
 			{
-				Id = chat.ConversationId,
+				Id = conversationId,
 				Token = handler.Token,
 				ExpiresIn = (int) DirectlineWebSocketHandler.TokenExpirationTime.TotalSeconds,
-				StreamUrl = $"ws://localhost:9000/directline/conversations/{chat.ConversationId}/stream?t={HttpUtility.UrlEncode(handler.Token)}"
+				StreamUrl = wsUri
 			};
 		}
 
 		async Task InitChatAsync(DirectlineChat chat)
 		{
-			var botAccount = chat.Bot;
+			var botAccount = new ChannelAccount
+			{
+				Id = DirectlineConfig.BotName,
+				Name = DirectlineConfig.BotName
+			};
 
 			if (!await chat.IsMemberAsync(botAccount))
 			{
@@ -63,7 +73,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
 		public async Task<DirectlineConversation> Get(string id, int? watermark)
 		{
-			var chat = DirectlineChat.GetOrCreate(id, DirectlineConfig.BotName, DirectlineConfig.ChatLog);
+			var chat = new DirectlineChat(id, DirectlineConfig.ChatLog);
 
 			var activities = await chat.GetActvitiesAsync();
 			if (!activities.Any())
@@ -71,7 +81,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 				await InitChatAsync(chat);
 			}
 
-			return CreateConversationResponse(chat);
+			return CreateConversationResponse(chat.ConversationId);
 		}
 	}
 }

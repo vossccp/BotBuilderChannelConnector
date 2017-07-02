@@ -37,4 +37,4 @@ using System.Runtime.InteropServices;
 // time we want to ship a new version to nuget
 [assembly: AssemblyVersion("4.0.0.0")]
 [assembly: AssemblyFileVersion("4.0.5.0")]
-[assembly: AssemblyInformationalVersion("4.0.6-alpha")]
+[assembly: AssemblyInformationalVersion("4.0.7-alpha")]

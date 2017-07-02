@@ -10,11 +10,13 @@ namespace Bot.Builder.ChannelConnector.Directline
 {
     public class InMemoryChatLog : IChatLog
     {
-        static readonly ConcurrentDictionary<string, List<Activity>> activityCache;
+        readonly ConcurrentDictionary<string, List<Activity>> activityCache;
+	    readonly HashSet<IChatLogListener> chatLogListeners;
 
-        static InMemoryChatLog()
+        public InMemoryChatLog()
         {
             activityCache = new ConcurrentDictionary<string, List<Activity>>();
+			chatLogListeners = new HashSet<IChatLogListener>();
         }
 
         List<Activity> GetActivities(string conversationId)
@@ -37,7 +39,30 @@ namespace Bot.Builder.ChannelConnector.Directline
         {
             var activities = GetActivities(activity.Conversation.Id);
             activities.Add(activity);
+			NotifyListeners(activity);
             return Task.CompletedTask;
         }
+
+	    void NotifyListeners(Activity activity)
+	    {
+		    foreach (var listener in chatLogListeners)
+		    {
+			    listener.OnActivity(activity);
+		    }
+		}
+
+		public void AddListener(IChatLogListener listener)
+	    {
+		    if (chatLogListeners.Contains(listener))
+		    {
+			    throw new InvalidOperationException("Listener already exists");
+		    }
+		    chatLogListeners.Add(listener);
+	    }
+
+	    public void RemoveListener(IChatLogListener listener)
+	    {
+		    chatLogListeners.Remove(listener);
+	    }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,19 +18,6 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
 	using WebSocketAccept =
 		Action<IDictionary<string, object>, /* options */ Func<IDictionary<string, object>, Task>>; // callback
-
-	using WebSocketCloseAsync =
-		Func<int /* closeStatus */, string /* closeDescription */, CancellationToken /* cancel */, Task>;
-
-	using WebSocketReceiveAsync =
-		Func<ArraySegment<byte> /* data */, CancellationToken /* cancel */, Task<Tuple<int /* messageType */, bool /* endOfMessage */, int /* count */>>>;
-
-	using WebSocketSendAsync =
-		Func<ArraySegment<byte> /* data */, int /* messageType */, bool /* endOfMessage */, CancellationToken /* cancel */, Task>;
-
-	using WebSocketReceiveResult = Tuple<int, // type
-		bool, // end of message?
-		int>; // count
 
 	public static class DirectlineWebsocketServer
 	{
@@ -65,46 +53,36 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 				{
 					accept(context.Environment, async websocketContext =>
 					{
-						var sendAsync = (WebSocketSendAsync)websocketContext["websocket.SendAsync"];
-						var receiveAsync = (WebSocketReceiveAsync)websocketContext["websocket.ReceiveAsync"];
-						var closeAsync = (WebSocketCloseAsync)websocketContext["websocket.CloseAsync"];
-						var callCancelled = (CancellationToken)websocketContext["websocket.CallCancelled"];
+						var webSocket = new OwinWebSocket(websocketContext);
 
-						await handler.OpenAsync(sendAsync);
+						await handler.OpenAsync(webSocket);
 
 						var buffer = new byte[64];
-
-						await receiveAsync(new ArraySegment<byte>(buffer), callCancelled);
-						while (!websocketContext.TryGetValue("websocket.ClientCloseStatus", out object status) || (int)status == 0)
+						while (webSocket.State == WebSocketState.Open)
 						{
 							// No need to receive any data from the websocket
-							// therefore, anything dealing with receiving data is omitted
-							await receiveAsync(new ArraySegment<byte>(buffer), callCancelled);
+							// therefore, anything dealing with receiving data is omitted							
+							await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer));
 						}
 
 						handler.Close();
 
-						await closeAsync
-						(
-							(int)websocketContext["websocket.ClientCloseStatus"],
-							(string)websocketContext["websocket.ClientCloseDescription"],
-							callCancelled
-						);
+						await webSocket.CloseAsync(webSocket.CloseStatus.Value, webSocket.CloseStatusDescription);
 					});
 
-					context.Response.StatusCode = (int)HttpStatusCode.OK;
+					context.Response.StatusCode = (int) HttpStatusCode.OK;
 				}
 				else
 				{
-					Trace.WriteLine($"Not handler for token {token[0]}");
+					Trace.TraceWarning($"Not handler for token {token[0]}");
 				}
 			}
 			else
 			{
-				Trace.WriteLine("No token");
+				Trace.TraceWarning("No token");
 			}
 
-			return Task.FromResult<object>(null);
+			return Task.CompletedTask;
 		}
 	}
 }

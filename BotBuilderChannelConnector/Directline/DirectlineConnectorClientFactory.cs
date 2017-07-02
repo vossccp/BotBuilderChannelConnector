@@ -8,23 +8,23 @@ using System.Threading.Tasks;
 
 namespace Bot.Builder.ChannelConnector.Directline
 {
-    public class DirectlineConnectorClientFactory : IConnectorClientFactory
-    {
-        readonly string conversationId;
+	public class DirectlineConnectorClientFactory : IConnectorClientFactory
+	{
+		readonly DirectlineChat chat;
 
-        public DirectlineConnectorClientFactory(string conversationId)
-        {
-            this.conversationId = conversationId;
-        }
+		public DirectlineConnectorClientFactory(DirectlineChat chat)
+		{
+			this.chat = chat;
+		}
 
-        public IConnectorClient MakeConnectorClient()
-        {
-            return new DirectlineConnectorClient(DirectlineChat.Get(conversationId));
-        }
+		public IConnectorClient MakeConnectorClient()
+		{
+			return new DirectlineConnectorClient(chat);
+		}
 
-        public IStateClient MakeStateClient()
-        {
-            throw new NotImplementedException();
-        }
-    }
+		public IStateClient MakeStateClient()
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

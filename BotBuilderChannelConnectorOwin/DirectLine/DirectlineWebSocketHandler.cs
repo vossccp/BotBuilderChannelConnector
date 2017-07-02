@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,9 +13,7 @@ using Newtonsoft.Json;
 
 namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 {
-	using WebSocketSendAsync = Func<ArraySegment<byte>, int, bool, CancellationToken, Task>;
-
-	public class DirectlineWebSocketHandler
+	public class DirectlineWebSocketHandler : IChatLogListener
 	{
 		public static JsonSerializerSettings JsonSerializerSettings { get; set; }
 
@@ -37,52 +36,67 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 			return null;
 		}
 
-		public static DirectlineWebSocketHandler Create(DirectlineChat chat)
+		public static DirectlineWebSocketHandler Create(string conversationId, IChatLog chatLog)
 		{
-			var handler = new DirectlineWebSocketHandler(chat);
+			var handler = new DirectlineWebSocketHandler(conversationId, chatLog);
 			HandlersByToken.TryAdd(handler.Token, handler);
+
+			ExpireTokens();
+
 			return handler;
 		}
 
-		WebSocketSendAsync sendAsync;
+		static void ExpireTokens()
+		{
+			var expiredHandlers = HandlersByToken.Values.Where(h => h.IsTokeExpired).ToList();
+			foreach (var expiredHandler in expiredHandlers)
+			{
+				HandlersByToken.TryRemove(expiredHandler.Token, out DirectlineWebSocketHandler ignore);
+			}
+		}
+
+		OwinWebSocket webSocket;
 
 		public string Token { get; }
 		public DateTime DateIssued { get; }
-		public DirectlineChat Chat { get; }
+		public string ConversationId { get; }
+		public IChatLog ChatLog { get; }
 
 		int Watermark { get; set; }
 
 		public bool IsTokeExpired => DateTime.UtcNow > DateIssued.Add(TokenExpirationTime);
 
-		DirectlineWebSocketHandler(DirectlineChat chat)
+		DirectlineWebSocketHandler(string conversationId, IChatLog chatLog)
 		{
-			Token = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace(" ", "");
+			Token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
 			DateIssued = DateTime.UtcNow;
-			Chat = chat;
+			ChatLog = chatLog;
+			ConversationId = conversationId;
 			Watermark = 0;
 		}
 
-		public async Task OpenAsync(WebSocketSendAsync sendAsync)
+		public async Task OpenAsync(OwinWebSocket webSocket)
 		{
-			this.sendAsync = sendAsync;
+			this.webSocket = webSocket;
 
-			Trace.WriteLine("Opening web socket connection");
+			Trace.TraceInformation("Opening web socket connection");
 
-			Chat.OnActivityAdded = async activity => await SendActivitiesAsync(new[] { activity });
+			ChatLog.AddListener(this);
 
-			var activities = (await Chat.GetActvitiesAsync()).Skip(Watermark).ToArray();
+			var activities = (await ChatLog.GetActivitiesAsync(ConversationId)).Skip(Watermark).ToArray();
 			await SendActivitiesAsync(activities);
 		}
 
 		public void Close()
 		{
-			Chat.OnActivityAdded = null;
-			sendAsync = null;
+			Trace.TraceInformation("Websocket closed");
+			ChatLog.RemoveListener(this);
+			webSocket = null;
 		}
 
 		async Task SendActivitiesAsync(Activity[] activities, bool addWatermark = true)
 		{
-			if (sendAsync == null) return;
+			if (webSocket == null) return;
 
 			Watermark = Watermark + activities.Length;
 			var result = new
@@ -92,16 +106,29 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 			};
 
 			var json = JsonConvert.SerializeObject(result, JsonSerializerSettings);
-
 			var bytes = Encoding.UTF8.GetBytes(json);
 			try
 			{
-				await sendAsync(new ArraySegment<byte>(bytes, 0, bytes.Length), 1, true, CancellationToken.None);
+				await webSocket.SendAsync
+				(
+					new ArraySegment<byte>(bytes, 0, bytes.Length),
+					WebSocketMessageType.Text,
+					true,
+					CancellationToken.None
+				);
 			}
 			catch (Exception e)
 			{
-				Trace.WriteLine($"Error sending to websocket {e}");
+				Trace.TraceError($"Error sending to websocket {e}");
 				throw;
+			}
+		}
+
+		public async void OnActivity(Activity activity)
+		{
+			if (activity.Conversation.Id == ConversationId)
+			{
+				await SendActivitiesAsync(new [] { activity });
 			}
 		}
 	}

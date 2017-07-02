@@ -11,5 +11,7 @@ namespace Bot.Builder.ChannelConnector.Directline
     {
         Task<IEnumerable<Activity>> GetActivitiesAsync(string conversationId);
         Task StoreAsync(Activity activity);
+	    void AddListener(IChatLogListener listener);
+	    void RemoveListener(IChatLogListener listener);
     }
 }

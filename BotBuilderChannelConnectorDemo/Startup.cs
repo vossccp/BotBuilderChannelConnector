@@ -24,12 +24,15 @@ namespace Bot.Builder.ChannelConnector.Demo
 
             appBuilder.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
 
+	        var chatLog = new InMemoryChatLog();
+	        const string botName = "Testbot";
+
             appBuilder.UseDirectline(
                 config: new DirectlineConfig
                 {
-                    BotName = "Testbot",
+                    BotName = botName,
                     ApiKey = "97IvKio_Vdk.cwA.1hs.GiH9JCCBjWDfVZOyzBnkcYT7yH-Aa_g843YBfCN_tBM",
-                    ChatLog = new InMemoryChatLog()
+                    ChatLog = chatLog
                 },
                 onActivityAsync: async activity =>
                 {
@@ -37,15 +40,15 @@ namespace Bot.Builder.ChannelConnector.Demo
                     switch (a.GetActivityType())
                     {
                         case ActivityTypes.ConversationUpdate:
-                            var chat = DirectlineChat.Get(activity.Conversation.Id);
-                            var client = new DirectlineConnectorClient(chat);							
+	                        var chat = new DirectlineChat(activity.Conversation.Id, chatLog);
+							var client = new DirectlineConnectorClient(chat);							
 
                             IConversationUpdateActivity update = a;
                             if (update.MembersAdded.Any())
                             {
-                                var message = chat.CreateMessage();
+                                var message = await chat.CreateMessageAsync();
 
-                                if (update.MembersAdded.Any(t => t.Id == "Testbot"))
+                                if (update.MembersAdded.Any(t => t.Id == botName))
                                 {
                                     // Bot added as Channel Member, can be used as a welcome message
 									// when the chat starts
@@ -55,7 +58,7 @@ namespace Bot.Builder.ChannelConnector.Demo
                                 else
                                 {
 									// display a welcome message for all members
-                                    var newMembers = update.MembersAdded.Where(t => t.Id != "Testbot");
+                                    var newMembers = update.MembersAdded.Where(t => t.Id != botName);
                                     foreach (var newMember in newMembers)
                                     {
                                         message.Text = "Welcome";

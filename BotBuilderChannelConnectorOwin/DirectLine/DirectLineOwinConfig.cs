@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Autofac.Integration.WebApi;
+using Microsoft.Owin.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -77,6 +78,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 			        id = RouteParameter.Optional
 		        }
 	        );
+
 
 			appBuilder.UseDirectlineWebSockets();
 			appBuilder.UseAutofacWebApi(httpConfig);
