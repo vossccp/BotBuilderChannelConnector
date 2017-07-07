@@ -10,50 +10,19 @@ using System.Threading.Tasks;
 using Bot.Builder.ChannelConnector.Directline;
 using Microsoft.Bot.Connector;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 {
 	public class DirectlineWebSocketHandler : IChatLogListener
 	{
-		public static JsonSerializerSettings JsonSerializerSettings { get; set; }
+		public static JsonSerializerSettings JsonSerializerSettings { get; set; } = new JsonSerializerSettings
+		{
+			ContractResolver = new CamelCasePropertyNamesContractResolver(),
+			NullValueHandling = NullValueHandling.Ignore
+		};
 
 		public static TimeSpan TokenExpirationTime = TimeSpan.FromSeconds(1800);
-
-		static readonly ConcurrentDictionary<string, DirectlineWebSocketHandler> HandlersByToken
-			= new ConcurrentDictionary<string, DirectlineWebSocketHandler>();
-
-		public static DirectlineWebSocketHandler GetByToken(string token)
-		{
-			// Token to be used only one time to establish connection
-
-			if (HandlersByToken.TryRemove(token, out DirectlineWebSocketHandler handler))
-			{
-				if (!handler.IsTokeExpired)
-				{
-					return handler;
-				}
-			}
-			return null;
-		}
-
-		public static DirectlineWebSocketHandler Create(string conversationId, IChatLog chatLog)
-		{
-			var handler = new DirectlineWebSocketHandler(conversationId, chatLog);
-			HandlersByToken.TryAdd(handler.Token, handler);
-
-			ExpireTokens();
-
-			return handler;
-		}
-
-		static void ExpireTokens()
-		{
-			var expiredHandlers = HandlersByToken.Values.Where(h => h.IsTokeExpired).ToList();
-			foreach (var expiredHandler in expiredHandlers)
-			{
-				HandlersByToken.TryRemove(expiredHandler.Token, out DirectlineWebSocketHandler ignore);
-			}
-		}
 
 		OwinWebSocket webSocket;
 
@@ -66,7 +35,7 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
 		public bool IsTokeExpired => DateTime.UtcNow > DateIssued.Add(TokenExpirationTime);
 
-		DirectlineWebSocketHandler(string conversationId, IChatLog chatLog)
+		internal DirectlineWebSocketHandler(string conversationId, IChatLog chatLog)
 		{
 			Token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
 			DateIssued = DateTime.UtcNow;
