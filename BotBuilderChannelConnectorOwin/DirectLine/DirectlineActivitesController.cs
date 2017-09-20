@@ -31,11 +31,11 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
             var skip = watermark.GetValueOrDefault(0);
 			var chat = new DirectlineChat(id, DirectlineConfig.ChatLog);
 
-			var activities = (await chat.GetActvitiesAsync()).Skip(skip).ToList();
+			var activities = (await chat.GetActvitiesAsync()).ToList();
 
             return new
             {
-                Activities = activities,
+                Activities = activities.Skip(skip).ToList(),
                 Watermark = activities.Count
             };
         }
