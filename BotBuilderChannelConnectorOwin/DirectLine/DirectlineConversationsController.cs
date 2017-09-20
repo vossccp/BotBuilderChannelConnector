@@ -22,11 +22,13 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
 		readonly Dictionary<string, DirectlineConfig> configs;
 		readonly Func<IMessageActivity, Task> onActivityAsync;
+		readonly DirectlineWebSocketHandlerRegistry handlerRegistry;
 
-		public DirectlineConversationsController(Dictionary<string, DirectlineConfig> configs, Func<IMessageActivity, Task> onActivityAsync)
+		public DirectlineConversationsController(Dictionary<string, DirectlineConfig> configs, Func<IMessageActivity, Task> onActivityAsync, DirectlineWebSocketHandlerRegistry handlerRegistry)
 		{
 			this.configs = configs;
 			this.onActivityAsync = onActivityAsync;
+			this.handlerRegistry = handlerRegistry;
 		}
 
 		public async Task<DirectlineConversation> Post()
@@ -42,16 +44,22 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
 		DirectlineConversation CreateConversationResponse(string conversationId)
 		{
-			var uri = Request.RequestUri;
-			var handler = DirectlineWebSocketHandler.Create(conversationId, DirectlineConfig.ChatLog);
+			var token = User.Identity.Name; // maps to directline secret
+			string wsUri = null;
 
-			var wsUri = $"ws://{uri.Host}:{uri.Port}/directline/conversations/{conversationId}/stream?t={HttpUtility.UrlEncode(handler.Token)}";
+			if (handlerRegistry.IsWebSocketSupported)
+			{
+				var uri = Request.RequestUri;
+				var handler = handlerRegistry.Create(conversationId, DirectlineConfig.ChatLog);
+				wsUri = $"ws://{uri.Host}:{uri.Port}/directline/conversations/{conversationId}/stream?t={HttpUtility.UrlEncode(handler.Token)}";
+				token = handler.Token;
+			}
 
 			return new DirectlineConversation
 			{
 				Id = conversationId,
-				Token = handler.Token,
-				ExpiresIn = (int) DirectlineWebSocketHandler.TokenExpirationTime.TotalSeconds,
+				Token = token,
+				ExpiresIn = (int)DirectlineWebSocketHandler.TokenExpirationTime.TotalSeconds,
 				StreamUrl = wsUri
 			};
 		}

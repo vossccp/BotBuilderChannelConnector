@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Compilation;
 using System.Web.Http;
 using Autofac.Integration.WebApi;
 using Microsoft.Owin.Extensions;
@@ -29,11 +30,12 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
             ChannelConnector.AddDirectlineConfig(configs);
 
             var httpConfig = new HttpConfiguration();
-
+			var handlerFactory = new DirectlineWebSocketHandlerRegistry();
             var builder = new ContainerBuilder();
 
             builder.RegisterType<DirectlineConversationsController>().InstancePerRequest();
             builder.RegisterType<DirectlineActivitesController>().InstancePerRequest();
+	        builder.RegisterInstance(handlerFactory);
 
             builder.RegisterInstance(configs.ToDictionary(c => c.ApiKey, c => c)).SingleInstance();
             builder.RegisterInstance(onActivityAsync);
@@ -79,8 +81,8 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 		        }
 	        );
 
+	        appBuilder.Use(typeof(DirectlineWebSocketMiddleware), handlerFactory);
 
-			appBuilder.UseDirectlineWebSockets();
 			appBuilder.UseAutofacWebApi(httpConfig);
 
             return appBuilder.UseWebApi(httpConfig);

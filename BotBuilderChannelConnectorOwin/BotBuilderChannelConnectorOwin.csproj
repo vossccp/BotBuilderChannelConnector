@@ -49,7 +49,8 @@
     <Compile Include="DirectLine\DirectLineOwinConfig.cs" />
     <Compile Include="DirectLine\DirectlineToken.cs" />
     <Compile Include="DirectLine\DirectlineWebSocketHandler.cs" />
-    <Compile Include="DirectLine\DirectlineWebsocketServer.cs" />
+    <Compile Include="DirectLine\DirectlineWebSocketHandlerRegistry.cs" />
+    <Compile Include="DirectLine\DirectlineWebSocketMiddleware.cs" />
     <Compile Include="DirectLine\OwinWebSocket.cs" />
     <Compile Include="Facebook\FacebookMessengerController.cs" />
     <Compile Include="Facebook\FacebookOwinConfig.cs" />

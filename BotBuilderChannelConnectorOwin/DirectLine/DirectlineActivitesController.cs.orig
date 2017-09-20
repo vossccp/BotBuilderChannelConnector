@@ -35,7 +35,11 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 
             return new
             {
+<<<<<<< HEAD
+                Activities = activities.Skip(skip).ToList(),
+=======
                 Activities = activities.Skip(skip),
+>>>>>>> 478868672596f525d595bf9ec382c5fb210fde1c
                 Watermark = activities.Count
             };
         }
