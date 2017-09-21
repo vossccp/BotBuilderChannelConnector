@@ -1,5 +1,6 @@
 Autofac
 Owin
+Autofac.Owin
 Autofac.WebApi2.Owin
 Microsoft.AspNet.WebApi.Owin
 Microsoft.Owin.Host.SystemWeb

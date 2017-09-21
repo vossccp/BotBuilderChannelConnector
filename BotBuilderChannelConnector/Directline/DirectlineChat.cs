@@ -4,7 +4,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.PeerToPeer.Collaboration;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
 using Newtonsoft.Json;

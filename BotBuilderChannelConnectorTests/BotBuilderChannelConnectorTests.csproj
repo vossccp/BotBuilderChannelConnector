@@ -161,20 +161,8 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6'">
       <ItemGroup>
-        <Reference Include="System.Net">
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="System.Net.Http.WebRequest">
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="System.Runtime.Serialization">
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="mscorlib">
-          <Paket>True</Paket>
-        </Reference>
         <Reference Include="Microsoft.Rest.ClientRuntime">
-          <HintPath>..\packages\Microsoft.Rest.ClientRuntime\lib\net45\Microsoft.Rest.ClientRuntime.dll</HintPath>
+          <HintPath>..\packages\Microsoft.Rest.ClientRuntime\lib\net452\Microsoft.Rest.ClientRuntime.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

@@ -5,6 +5,7 @@ source https://www.nuget.org/api/v2/
 nuget Newtonsoft.Json redirects: on
 nuget Autofac
 nuget Owin
+nuget Autofac.Owin
 nuget Autofac.WebApi2.Owin
 nuget Microsoft.AspNet.WebApi.Owin
 nuget Microsoft.Owin.SelfHost
