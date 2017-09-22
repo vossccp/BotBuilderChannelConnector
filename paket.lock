@@ -1,5 +1,5 @@
 REDIRECTS: OFF
-FRAMEWORK: NET46
+RESTRICTION: == net46
 NUGET
   remote: https://www.nuget.org/api/v2
     Autofac (4.6.1)
@@ -65,7 +65,7 @@ NUGET
 
 GROUP test
 REDIRECTS: OFF
-FRAMEWORK: NET46
+RESTRICTION: == net46
 NUGET
   remote: https://www.nuget.org/api/v2
     xunit (2.2)

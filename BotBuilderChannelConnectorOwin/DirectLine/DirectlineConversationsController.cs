@@ -12,6 +12,7 @@ using System.Web.Http;
 using Autofac.Integration.WebApi;
 using Bot.Builder.ChannelConnector.Directline;
 using Microsoft.Bot.Connector;
+using Microsoft.Owin;
 
 namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 {
@@ -42,12 +43,22 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 			return CreateConversationResponse(chat.ConversationId);
 		}
 
+		bool IsWebSocketSupported
+		{
+			get
+			{
+				var owinContext = Request.Properties["MS_OwinContext"] as OwinContext;
+				var serverCapabilites = owinContext?.Request.Environment["server.Capabilities"] as Dictionary<string, object>;
+				return serverCapabilites != null && serverCapabilites.ContainsKey("websocket.Version");
+			}
+		}
+
 		DirectlineConversation CreateConversationResponse(string conversationId)
 		{
 			var token = User.Identity.Name; // maps to directline secret
 			string wsUri = null;
 
-			if (handlerRegistry.IsWebSocketSupported)
+			if (IsWebSocketSupported)
 			{
 				var uri = Request.RequestUri;
 				var handler = handlerRegistry.Create(conversationId, DirectlineConfig.ChatLog);

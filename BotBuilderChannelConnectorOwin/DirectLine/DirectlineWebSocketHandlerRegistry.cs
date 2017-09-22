@@ -13,8 +13,6 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 		readonly ConcurrentDictionary<string, DirectlineWebSocketHandler> handlersByToken
 			= new ConcurrentDictionary<string, DirectlineWebSocketHandler>();
 
-		public bool IsWebSocketSupported { get; } = true;
-
 		public DirectlineWebSocketHandler GetByToken(string token)
 		{
 			// Token to be used only one time to establish connection

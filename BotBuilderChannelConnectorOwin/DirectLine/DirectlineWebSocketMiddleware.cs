@@ -23,12 +23,18 @@ namespace Bot.Builder.ChannelConnector.Owin.DirectLine
 			this.handlerRegistry = handlerRegistry;
 		}
 
+		static bool server = false;
+
 		public override Task Invoke(IOwinContext context)
 		{
 			var accept = context.Get<WebSocketAccept>("websocket.Accept");
 			if (accept == null)
 			{
 				// Not a websocket request
+				//
+				// Note: Windows 7 doenst nativly support WebSockets 
+				// and will not return a socket despite the request being a propper 
+				// web socket request
 				return Next.Invoke(context);
 			}
 
