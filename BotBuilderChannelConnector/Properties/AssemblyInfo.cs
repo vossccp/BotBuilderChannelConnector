@@ -36,5 +36,5 @@ using System.Runtime.InteropServices;
 // change the AsseblyFileVeriosn and the AssemblyFileInfomationVersion every
 // time we want to ship a new version to nuget
 [assembly: AssemblyVersion("4.0.0.0")]
-[assembly: AssemblyFileVersion("4.0.5.0")]
-[assembly: AssemblyInformationalVersion("4.0.8-alpha")]
+[assembly: AssemblyFileVersion("4.0.9.0")]
+[assembly: AssemblyInformationalVersion("4.0.9-alpha")]
